@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Correspondence;
 use App\Document;
 use App\DocumentType;
@@ -103,6 +104,10 @@ class CorrespondencesController extends Controller
         $correspondence->register_number = '17-01-09/' . $correspondence->id;
 
         $correspondence->update();
+
+        $branch = Branch::find(1);
+
+//        Mail::to($branch->leader()->email)->send(new ApproveDocument($correspondence));
 
         return redirect()->to(route('page.correspondence.show', ['correspondence' => $correspondence->id]));
     }

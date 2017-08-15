@@ -31,7 +31,6 @@ class CreateUser extends FormRequest
             'middle_name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'department_id' => 'required',
-            'subdivision_id' => 'required',
             'position_id' => 'required'
         ];
     }
@@ -54,7 +53,6 @@ class CreateUser extends FormRequest
             'email.email' => 'Электронный адрес должен быть дейсвительным',
             'email.max' => 'Электронный адрес не должен превышать 255 символов',
             'department_id.required' => 'Укажите отдел пользователя',
-            'subdivision_id.required' => 'Укажите подотдел пользователя',
             'position_id.required' => 'Укажите должность пользователя',
         ];
     }

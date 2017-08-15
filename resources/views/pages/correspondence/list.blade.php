@@ -50,7 +50,7 @@
                                         <div class="status"></div>
                                     @endif
                                 </td>
-                                <td class="width-content"><a href="{{ route('page.correspondence', ['correspondence' => $item->id]) }}" class="uk-button">Просмотреть</a></td>
+                                <td class="width-content"><a href="{{ route('page.correspondence.show', ['correspondence' => $item->id]) }}" class="uk-button">Просмотреть</a></td>
                             </tr>
                         @endforeach
                     </tbody>

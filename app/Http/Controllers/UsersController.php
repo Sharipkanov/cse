@@ -76,7 +76,7 @@ class UsersController extends Controller
         $user->middle_name = $request->input('middle_name');
         $user->email = $request->input('email');
         $user->department_id = $request->input('department_id');
-        $user->subdivision_id = $request->input('subdivision_id');
+        $user->subdivision_id = ($request->has('subdivision_id') ? $request->input('subdivision_id') : 0);
         $user->position_id = $request->input('position_id');
         $user->password = bcrypt('astana2017');
         $user->branch_id = 1;
