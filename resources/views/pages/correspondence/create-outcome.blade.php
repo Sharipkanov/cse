@@ -1,0 +1,87 @@
+@extends('layouts.app')
+
+@section('title'){{ $title }}@endsection
+
+@section('page')
+    <div class="uk-width-1-1 uk-margin-top">
+        <div class="uk-container uk-container-center">
+            <form action="{{ route('page.correspondence.store.outcome') }}" class="uk-form uk-margin-top uk-margin-large-bottom" method="post" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <fieldset>
+                    <h3>{{ $title }}</h3>
+                    <hr>
+                    <div class="uk-grid uk-grid-width-1-1">
+                        <div>
+                            <label class="uk-form-label">Язык обращения:</label>
+                            <div class="uk-form-controls uk-margin-small-top uk-flex">
+                                @foreach($languages as $language)
+                                    <div class="{{ ($loop->first) ? 'uk-margin-right' : ''}}">
+                                        <label class="uk-flex uk-flex-middle">
+                                    <span class="uk-margin-small-right">
+                                        <input type="radio" name="language_id" value="{{ $language->id }}" {{ (old('language_id') == $language->id) ? 'checked' : '' }}>
+                                    </span>
+                                            <span>{{ $language->name }}</span>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @if ($errors->has('language_id'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('language_id') }}</p>
+                        @endif
+
+                        <div class="uk-margin-top">
+                            <label class="uk-form-label">Корреспондент:</label>
+                            <div class="uk-form-controls uk-margin-small-top">
+                                <a href="#correspondent-choose-modal" data-uk-modal class="uk-button uk-button-primary">Выбрать</a>
+                                <input type="text" name="" id="correspondent-input-placeholder" class="uk-hidden">
+                                <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
+                            </div>
+                        </div>
+                        @if ($errors->has('correspondent_id'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('correspondent_id') }}</p>
+                        @endif
+
+                        <div class="uk-margin-top">
+                            <label class="uk-form-label">Страницы:</label>
+                            <div class="uk-form-controls uk-margin-small-top">
+                                <input name="pages" class="uk-width-1-1{{ $errors->has('pages') ? ' uk-form-danger' : '' }}" value="{{ old('info') }}" placeholder="Введите количество страниц">
+                            </div>
+                        </div>
+                        @if ($errors->has('pages'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('pages') }}</p>
+                        @endif
+
+                        <div class="uk-margin-top">
+                            <label class="uk-form-label">ФИО исполнителя:</label>
+                            <div class="uk-form-controls uk-margin-small-top">
+                                <input name="executor_fullname" class="uk-width-1-1" value="{{ $document->author()->last_name .' '. $document->author()->first_name .' '. $document->author()->middle_name}}" disabled>
+                            </div>
+                        </div>
+                        <div class="uk-margin-top">
+                            <label class="uk-form-label">Тип документа</label>
+                            <div class="uk-form-controls uk-margin-small-top">
+                                <input type="text" value="{{$document->type()->name}}" disabled name="" class="uk-width-1-1">
+                                <input type="hidden" name="document_type_id" value="{{ $document->type()->id }}">
+                                <input type="hidden" name="document_id" value="{{ $document->id }}">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="uk-text-right">
+                        <button type="submit" class="uk-button uk-button-success">Создать карточку</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <!-- This is the modal -->
+    <div id="correspondent-choose-modal" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <a class="uk-modal-close uk-close"></a>
+            ...
+        </div>
+    </div>
+
+@endsection
