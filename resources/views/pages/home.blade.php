@@ -23,12 +23,12 @@
                     </a>
                 </div>
                 <div>
-                    <a href="#" class="uk-panel uk-panel-box uk-flex uk-flex-middle uk-flex-center">
+                    <a href="{{ route('page.structure') }}" class="uk-panel uk-panel-box uk-flex uk-flex-middle uk-flex-center">
                         <span class="uk-h3">Структура и ОК</span>
                     </a>
                 </div>
                 <div>
-                    <a href="#" class="uk-panel uk-panel-box uk-flex uk-flex-middle uk-flex-center">
+                    <a href="https://mail.yandex.kz/" target="_blank" class="uk-panel uk-panel-box uk-flex uk-flex-middle uk-flex-center">
                         <span class="uk-h3">Почта</span>
                     </a>
                 </div>

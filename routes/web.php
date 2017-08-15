@@ -59,6 +59,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('correspondent.html', 'CorrespondentsController@get')->name('page.correspondence.correspondent');
     });
 
+    Route::get('structure.html', 'UsersController@index')->name('page.structure');
+
     Route::group(['prefix' => 'user'], function() {
         Route::get('create.html', 'UsersController@create')->name('page.user.create');
         Route::get('show.html', 'UsersController@create')->name('page.user.show');

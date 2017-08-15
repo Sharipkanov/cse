@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Department;
 use App\Http\Requests\CreateUser;
 use App\Position;
@@ -33,11 +34,15 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * Branch $branch
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Branch $branch)
     {
-        //
+        return response()->view('pages.user.structure', [
+            'title' => 'Структура | ' . config('app.name'),
+            'branch' => $branch->find(1)
+        ]);
     }
 
     /**
