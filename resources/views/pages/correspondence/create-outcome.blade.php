@@ -10,7 +10,7 @@
                 <fieldset>
                     <h3>{{ $title }}</h3>
                     <hr>
-                    <div class="uk-grid uk-grid-width-1-1">
+                    <div>
                         <div>
                             <label class="uk-form-label">Язык обращения:</label>
                             <div class="uk-form-controls uk-margin-small-top uk-flex">
@@ -30,12 +30,14 @@
                             <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('language_id') }}</p>
                         @endif
 
-                        <div class="uk-margin-top">
+                        <div class="uk-margin-top uk-position-relative">
                             <label class="uk-form-label">Корреспондент:</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <a href="#correspondent-choose-modal" data-uk-modal class="uk-button uk-button-primary">Выбрать</a>
-                                <input type="text" name="" id="correspondent-input-placeholder" class="uk-hidden">
+                                <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
                                 <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
+                            </div>
+                            <div class="drop-down" id="correspondent-drop-down">
+
                             </div>
                         </div>
                         @if ($errors->has('correspondent_id'))
@@ -55,13 +57,13 @@
                         <div class="uk-margin-top">
                             <label class="uk-form-label">ФИО исполнителя:</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <input name="executor_fullname" class="uk-width-1-1" value="{{ $document->author()->last_name .' '. $document->author()->first_name .' '. $document->author()->middle_name}}" disabled>
+                                <input name="executor_fullname" class="uk-width-1-1" value="{{ $document->author()->last_name .' '. $document->author()->first_name .' '. $document->author()->middle_name}}" readonly>
                             </div>
                         </div>
                         <div class="uk-margin-top">
                             <label class="uk-form-label">Тип документа</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <input type="text" value="{{$document->type()->name}}" disabled name="" class="uk-width-1-1">
+                                <input type="text" value="{{$document->type()->name}}" readonly name="" class="uk-width-1-1">
                                 <input type="hidden" name="document_type_id" value="{{ $document->type()->id }}">
                                 <input type="hidden" name="document_id" value="{{ $document->id }}">
                             </div>
@@ -73,14 +75,6 @@
                     </div>
                 </fieldset>
             </form>
-        </div>
-    </div>
-
-    <!-- This is the modal -->
-    <div id="correspondent-choose-modal" class="uk-modal">
-        <div class="uk-modal-dialog">
-            <a class="uk-modal-close uk-close"></a>
-            ...
         </div>
     </div>
 

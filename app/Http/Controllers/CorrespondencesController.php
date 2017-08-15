@@ -117,7 +117,7 @@ class CorrespondencesController extends Controller
         $correspondence->document_id = $request->input('document_id');
         $correspondence->save();
 
-        return redirect()->to(route('page.document.show', ['correspondence' => $correspondence->id]));
+        return redirect()->to(route('page.document.show', ['document' => $correspondence->document_id]));
     }
 
     /**

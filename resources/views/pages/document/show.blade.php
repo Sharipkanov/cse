@@ -16,8 +16,11 @@
                             <button  type="submit" class="uk-button">Создать копию</button>
                         </form>
                     @endif
-                    @if($item->status == 2 && auth()->user()->id == $item->author()->id)
+                    @if($item->status == 2 && auth()->user()->id == $item->author()->id && !$item->correspondence())
                         <a href="{{ route('page.correspondence.outcome.create', ['document' => $item->id]) }}" class="uk-button uk-button-success">Создать исходящий</a>
+                    @endif
+                    @if($item->correspondence())
+                        <a href="{{ route('page.correspondence.show', ['correspondence' => $item->correspondence()->id]) }}" class="uk-button uk-button-success">Просмотреть исходящую карточку</a>
                     @endif
                 </div>
                 <div>
@@ -32,7 +35,7 @@
                     @foreach(array_reverse($leaders) as $key => $leader)
                         <div class="uk-form-row">
                             <label class="uk-flex uk-flex-middle">
-                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}:{{$key + 1}}"></span>
+                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}"></span>
                                 <span>{{ $leader->last_name }} {{ $leader->first_name }} {{ $leader->middle_name }}</span>
                             </label>
                         </div>

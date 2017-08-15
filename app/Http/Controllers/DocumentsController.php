@@ -158,12 +158,12 @@ class DocumentsController extends Controller
 
             foreach ($request->input('approvers') as $key => $approveData) {
                 $approveData = explode(':', $approveData);
-                if($approveData[1] == 1) $userId = $approveData[0];
+                if($key == 0) $userId = $approveData[0];
 
                 $newDocumentApprove = new DocumentApprove();
                 $newDocumentApprove->user_id = $approveData[0];
                 $newDocumentApprove->document_id = $document->id;
-                $newDocumentApprove->order = $approveData[1];
+                $newDocumentApprove->order = $key + 1;
                 $newDocumentApprove->save();
             }
 

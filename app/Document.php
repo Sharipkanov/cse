@@ -25,4 +25,9 @@ class Document extends Model
     {
         return $this->belongsTo(Document::class, 'parent_id', 'id')->first();
     }
+
+    public function correspondence()
+    {
+        return $this->belongsTo(Correspondence::class, 'id', 'document_id')->first();
+    }
 }

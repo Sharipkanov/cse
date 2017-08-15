@@ -196,12 +196,6 @@ $(document).ready(function() {
         $correspondenceDropDown.removeClass('active');
     });
 
-    $(document).on('click', function(e) {
-        var $target = $(e.target);
-
-        if($target.closest('.drop-down').length < 1) $('.drop-down').removeClass('active');
-    });
-
     $(document).on('click', '.approve-type', function(e) {
         e.preventDefault();
 
@@ -212,6 +206,61 @@ $(document).ready(function() {
         $input.prop('checked', true);
 
         (parseInt($input.val()) === 2) ? $approveInfo.removeClass('uk-hidden') : $approveInfo.addClass('uk-hidden');
+    });
+
+    var $correspondentSearchInput = $('#correspondent-search-input'),
+        $correspondentInput = $('#correspondent-input'),
+        $correspondentDropDown = $('#correspondent-drop-down');
+
+    $correspondentSearchInput.keyup(function() {
+        var $input = $(this),
+            inputValue = $input.val();
+
+        $.ajax({
+            type: "POST",
+            url: '/correspondence/correspondent.html',
+            data: {correspondent: inputValue, get_correspondent: 1},
+            success: function(response) {
+                $correspondentDropDown.removeClass('danger');
+                $correspondentDropDown.empty();
+
+                for(var i=0; i<response.length; i++) {
+                    var correspondent = response[i],
+                        correspondentCode = correspondent['code'];
+
+                    $('<a href="#" class="correspondent-choose" data-id="'+ correspondent['id'] +'">'+ correspondent['name'] +'</a>').appendTo($correspondentDropDown);
+                }
+
+                if(!$correspondentDropDown.hasClass('active')) $correspondentDropDown.addClass('active');
+            },
+            error: function(response) {
+                if(response.status === 422) {
+                    $correspondentDropDown.addClass('danger');
+                    $correspondentDropDown.empty();
+                    $('<p>'+ response['responseJSON']['message'] +'</p>').appendTo($correspondentDropDown);
+
+                    if(!$correspondentDropDown.hasClass('active')) $correspondentDropDown.addClass('active');
+                }
+            },
+            dataType: 'json'
+        });
+    });
+
+    $(document).on('click', '.correspondent-choose', function(e) {
+        e.preventDefault();
+
+        var $link = $(this);
+
+        $correspondentInput.val($link.data('id'));
+        $correspondentSearchInput.val($link.html());
+
+        $correspondentDropDown.removeClass('active');
+    });
+
+    $(document).on('click', function(e) {
+        var $target = $(e.target);
+
+        if($target.closest('.drop-down').length < 1) $('.drop-down').removeClass('active');
     });
 
 });

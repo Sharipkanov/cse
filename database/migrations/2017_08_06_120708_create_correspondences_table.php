@@ -30,6 +30,7 @@ class CreateCorrespondencesTable extends Migration
             $table->integer('user_id')->default(0);
             $table->integer('document_id')->default(0);
             $table->boolean('is_income')->default(0);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

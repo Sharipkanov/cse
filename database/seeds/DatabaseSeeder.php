@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
          $this->call(ExpertiseSpecialitiesTableSeeder::class);
          $this->call(ExpertiseStatusesTableSeeder::class);
          $this->call(ExpertiseOrgansTableSeeder::class);
+         $this->call(CorrespondentsTableSeeder::class);
     }
 }

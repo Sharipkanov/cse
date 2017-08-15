@@ -45,4 +45,15 @@ class CreateOutcomeCorrespondence extends FormRequest
             'pages.required' => 'Укажите количество страниц'
         ];
     }
+
+    public function response(array $errors)
+    {
+        if ($this->expectsJson()) {
+            return new JsonResponse($errors, 422);
+        }
+
+        return $this->redirector->to(route('page.correspondence.outcome.create', ['document' => $this->request->get('document_id')]))
+            ->withInput($this->except($this->dontFlash))
+            ->withErrors($errors, $this->errorBag);
+    }
 }

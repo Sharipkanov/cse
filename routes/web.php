@@ -50,11 +50,12 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('{type}/list.html', 'CorrespondencesController@index')
             ->where(['type' => '[a-z]+'])->name('page.correspondence.list');
 
+        Route::get('{correspondence}/show.html', 'CorrespondencesController@show')->name('page.correspondence.show');
         Route::get('income/create.html', 'CorrespondencesController@create')->name('page.correspondence.income.create');
         Route::get('outcome/{document}/create.html', 'CorrespondencesController@create_outcome')->name('page.correspondence.outcome.create');
         Route::post('store.html', 'CorrespondencesController@store')->name('page.correspondence.store');
         Route::post('outcome/store.html', 'CorrespondencesController@store_outcome')->name('page.correspondence.store.outcome');
         Route::post('correspondence.html', 'CorrespondencesController@correspondence')->name('page.correspondence');
-        Route::post('correspondent.html', 'CorrespondencesController@correspondent')->name('page.correspondence.correspondent');
+        Route::post('correspondent.html', 'CorrespondentsController@get')->name('page.correspondence.correspondent');
     });
 });
