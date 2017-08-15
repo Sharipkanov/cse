@@ -3,9 +3,16 @@
 @section('title'){{ $title }}@endsection
 
 @section('page')
+    @if(session()->has('success'))
+        <div class="uk-width-1-1 uk-margin-top">
+            <div class="uk-container uk-container-center">
+                <span class="h4 uk-text-success">Пользоватедь успешно создан</span>
+            </div>
+        </div>
+    @endif
     <div class="uk-width-1-1 uk-margin-top">
         <div class="uk-container uk-container-center">
-            <form action="{{ route('page.user.store') }}" class="uk-form uk-margin-top uk-margin-large-bottom" method="post" enctype="multipart/form-data">
+            <form action="{{ route('page.user.store') }}" class="uk-form uk-margin-large-bottom" method="post" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <fieldset>
                     <h3>{{ $title }}</h3>
@@ -70,7 +77,7 @@
                             <div class="uk-margin-top">
                                 <label class="uk-form-label">Наименование органа:</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <select id="expertise-agency-select" class="uk-width-1-1{{($errors->has('subdivision_id')) ? ' uk-form-danger' : ''}}" name="subdivision_id">
+                                    <select class="uk-width-1-1{{($errors->has('subdivision_id')) ? ' uk-form-danger' : ''}}" name="subdivision_id">
                                         <option value="">Выберите пододел</option>
                                         @foreach($departments as $department)
                                             <option value="" disabled>{{ $department->name }}</option>

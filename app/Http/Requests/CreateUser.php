@@ -31,7 +31,8 @@ class CreateUser extends FormRequest
             'middle_name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'department_id' => 'required',
-            'subdivision_id' => 'required'
+            'subdivision_id' => 'required',
+            'position_id' => 'required'
         ];
     }
 
@@ -43,10 +44,18 @@ class CreateUser extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Тема документа обезательна к заполнению',
-            'name.max' => 'Тема документа не должо быть более 255 символов',
-            'files.required' => 'Прикрипите файл или файлы',
-            'files.max' => 'Общий размер файла или файлов не должен привышать 10 мегабайт'
+            'first_name.required' => 'Укажите Имя пользователя',
+            'first_name.max' => 'Имя не должно превышать 255 символов',
+            'last_name.required' => 'Укажите Фамилию пользователя',
+            'last_name.max' => 'Фамилия не должна превышать 255 символов',
+            'middle_name.required' => 'Укажите Отчество пользователя',
+            'middle_name.max' => 'Отчество не должно превышать 255 символов',
+            'email.required' => 'Укажите электроную почту пользователя',
+            'email.email' => 'Электронный адрес должен быть дейсвительным',
+            'email.max' => 'Электронный адрес не должен превышать 255 символов',
+            'department_id.required' => 'Укажите отдел пользователя',
+            'subdivision_id.required' => 'Укажите подотдел пользователя',
+            'position_id.required' => 'Укажите должность пользователя',
         ];
     }
 }

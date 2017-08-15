@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Http\Requests\CreateUser;
 use App\Position;
+use App\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -57,12 +59,26 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  CreateUser  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateUser $request)
     {
-        //
+        $user = new User();
+
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->middle_name = $request->input('middle_name');
+        $user->email = $request->input('email');
+        $user->department_id = $request->input('department_id');
+        $user->subdivision_id = $request->input('subdivision_id');
+        $user->position_id = $request->input('position_id');
+        $user->password = bcrypt('astana2017');
+        $user->branch_id = 1;
+
+        $user->save();
+
+        return response()->redirectTo(route('page.user.create'))->with('success', 'success');
     }
 
     /**
