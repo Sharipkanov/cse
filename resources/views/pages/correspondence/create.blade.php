@@ -31,6 +31,20 @@
                                 <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('language_id') }}</p>
                             @endif
 
+                            <div class="uk-margin-top uk-position-relative">
+                                <label class="uk-form-label">Корреспондент:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
+                                    <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
+                                </div>
+                                <div class="drop-down" id="correspondent-drop-down">
+
+                                </div>
+                            </div>
+                            @if ($errors->has('correspondent_id'))
+                                <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('correspondent_id') }}</p>
+                            @endif
+
                             <div class="uk-margin-top">
                                 <label class="uk-form-label">ФИО исполнителя:</label>
                                 <div class="uk-form-controls uk-margin-small-top">
@@ -54,7 +68,7 @@
                             <div class="uk-margin-top">
                                 <label class="uk-form-label">Дата исходящего:</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" class="uk-width-1-1{{ $errors->has('outcome_date') ? ' uk-form-danger' : '' }}" name="outcome_date" placeholder="Выберите дату исходящего" name="date" data-uk-datepicker="{format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
+                                    <input type="text" class="uk-width-1-1{{ $errors->has('outcome_date') ? ' uk-form-danger' : '' }}" name="outcome_date" placeholder="Выберите дату исходящего" name="date" data-uk-datepicker="{maxDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                                 </div>
                             </div>
                             @if ($errors->has('outcome_date'))
@@ -64,7 +78,7 @@
                             <div class="uk-margin-top">
                                 <label class="uk-form-label">Срок исполнения:</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" class="uk-width-1-1" name="execution_period" placeholder="Выберите cрок исполнения" data-uk-datepicker="{format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
+                                    <input type="text" class="uk-width-1-1" name="execution_period" placeholder="Выберите cрок исполнения" data-uk-datepicker="{minDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                                 </div>
                             </div>
                             @if ($errors->has('execution_period'))

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Correspondence;
 use App\Document;
 use App\DocumentType;
+use App\File;
 use App\Http\Requests\CreateCorrespondence;
 use App\Http\Requests\CreateOutcomeCorrespondence;
 use App\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FilesController as Files;
+use phpDocumentor\Reflection\Location;
 
 class CorrespondencesController extends Controller
 {
@@ -94,7 +96,7 @@ class CorrespondencesController extends Controller
         $correspondence->save();
 
         if($request->hasFile('files')) {
-            $fileStoreFolder = 'documents/' . $correspondence->id;
+            $fileStoreFolder = 'correspondence/' . $correspondence->id;
             $correspondence->files = implode(',', Files::upload($request->file('files'), $fileStoreFolder));
         }
 
@@ -102,7 +104,7 @@ class CorrespondencesController extends Controller
 
         $correspondence->update();
 
-        return redirect()->to(route('page.document.show', ['correspondence' => $correspondence->id]));
+        return redirect()->to(route('page.correspondence.show', ['correspondence' => $correspondence->id]));
     }
 
     public function store_outcome(CreateOutcomeCorrespondence $request)
@@ -123,23 +125,45 @@ class CorrespondencesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param File $file
+     * @param  Correspondence $correspondence
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(File $file, Correspondence $correspondence)
     {
-        //
+        if(!$correspondence) return abort(404);
+
+        $correspondence->fileList = ($correspondence->files)
+            ? $file->whereIn('id', explode(',', $correspondence->files))->get()
+            : [];
+
+        $title = ($correspondence->status)
+            ? 'Исходящий документ: ' . $correspondence->document_type()->name . ' № ' . $correspondence->register_number
+            : 'Регистрация карточки исходящего документа';
+
+        return view('pages.correspondence.show', [
+            'title' => $title .' | '.config('app.name'),
+            'item' => $correspondence
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Correspondence $correspondence
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, Correspondence $correspondence)
     {
-        //
+        if(!$correspondence) return abort(404);
+
+        if($request->has('register')) {
+            $correspondence->status = 1;
+            $correspondence->register_number = $correspondence->document()->nomenclature()->code . '/' . $correspondence->id;
+            $correspondence->save();
+        }
+
+        return response()->redirectTo(route('page.correspondence.show', ['correspondence' => $correspondence->id]));
     }
 
     /**
@@ -168,7 +192,7 @@ class CorrespondencesController extends Controller
     public function correspondence(Request $request, Correspondence $correspondence)
     {
         if($request->has('correspondence')) {
-            $result = $correspondence->where('register_number', 'like', '%'. $request->input('correspondence') .'%')->get();
+            $result = $correspondence->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('correspondence') .'%')->get();
 
             if(count($result)) return response()->json($result, 200);
 

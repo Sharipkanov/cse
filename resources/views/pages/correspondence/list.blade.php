@@ -7,15 +7,15 @@
     <div class="uk-margin-top uk-width-1-1">
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                <div class="uk-margin-top uk-flex uk-flex-middle">
+                <div class="uk-flex uk-flex-middle">
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>На регистраций</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                 </div>
                 <div>
-                    @if($type == 'income')
+                    @if($type == 'income' && auth()->user()->position_id == 4)
                         <a href="{{ route('page.correspondence.income.create') }}" class="uk-button uk-button-success">Создать регистрационную карточку входящего документа</a>
                     @endif
-                    <a href="#" class="uk-button uk-button-primary">Зарезервировать регистрационный номер</a>
+                    {{--<a href="#" class="uk-button uk-button-primary">Зарезервировать регистрационный номер</a>--}}
                 </div>
             </div>
         </div>

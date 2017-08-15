@@ -190,7 +190,7 @@
                                     </div>
                                 </div>
                                 <div class="uk-margin-top">
-                                    <span class="uk-h4">Данные лица назначевшего экспертизу</span>
+                                    <span class="uk-h4">Данные лица назначившего экспертизу</span>
                                 </div>
                                 <div class="uk-margin-top expertise-extra-fields" id="expertise-user-fullname">
                                     <label class="uk-form-label">ФИО:</label>

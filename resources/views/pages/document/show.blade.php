@@ -208,7 +208,7 @@
                     </div>
                 @endif
 
-                @if($approves)
+                @if(count($approves))
                     <hr>
                     @foreach($approves as $approve)
                         <div class="{{ (!$loop->first) ? 'uk-margin-top' : '' }}">

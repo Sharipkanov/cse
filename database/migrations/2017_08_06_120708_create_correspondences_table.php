@@ -18,10 +18,10 @@ class CreateCorrespondencesTable extends Migration
             $table->string('register_number')->nullable()->default(null);
             $table->integer('language_id');
             $table->integer('correspondent_id');
-            $table->integer('outcome_number')->default(0);
-            $table->timestamp('outcome_date')->nullable()->default(null);
+            $table->string('outcome_number')->nullable()->default(null);
+            $table->string('outcome_date')->nullable()->default(null);
             $table->string('executor_fullname');
-            $table->timestamp('execution_period')->nullable()->default(null);
+            $table->string('execution_period')->nullable()->default(null);
             $table->integer('pages');
             $table->string('files')->nullable()->default(null);
             $table->integer('reply_correspondence_id')->default(0);
@@ -30,7 +30,7 @@ class CreateCorrespondencesTable extends Migration
             $table->integer('user_id')->default(0);
             $table->integer('document_id')->default(0);
             $table->boolean('is_income')->default(0);
-            $table->boolean('status')->default(0);
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }

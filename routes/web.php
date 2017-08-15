@@ -49,13 +49,19 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group(['prefix' => 'correspondence'], function() {
         Route::get('{type}/list.html', 'CorrespondencesController@index')
             ->where(['type' => '[a-z]+'])->name('page.correspondence.list');
-
         Route::get('{correspondence}/show.html', 'CorrespondencesController@show')->name('page.correspondence.show');
         Route::get('income/create.html', 'CorrespondencesController@create')->name('page.correspondence.income.create');
         Route::get('outcome/{document}/create.html', 'CorrespondencesController@create_outcome')->name('page.correspondence.outcome.create');
+        Route::post('{correspondence}/register.html', 'CorrespondencesController@edit')->name('page.correspondence.edit');
         Route::post('store.html', 'CorrespondencesController@store')->name('page.correspondence.store');
         Route::post('outcome/store.html', 'CorrespondencesController@store_outcome')->name('page.correspondence.store.outcome');
         Route::post('correspondence.html', 'CorrespondencesController@correspondence')->name('page.correspondence');
         Route::post('correspondent.html', 'CorrespondentsController@get')->name('page.correspondence.correspondent');
+    });
+
+    Route::group(['prefix' => 'user'], function() {
+        Route::get('create.html', 'UsersController@create')->name('page.user.create');
+        Route::get('show.html', 'UsersController@create')->name('page.user.show');
+        Route::post('store.html', 'UsersController@store')->name('page.user.store');
     });
 });
