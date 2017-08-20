@@ -110,7 +110,7 @@
                     </div>
                     <hr>
                     <div class="uk-text-right">
-                        <button type="submit" class="uk-button uk-button-success">Создать карточку</button>
+                        <button type="submit" class="uk-button uk-button-success">Создать пользователя</button>
                     </div>
                 </fieldset>
             </form>

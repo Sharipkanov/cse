@@ -49,7 +49,7 @@
                     <tbody>
                     @foreach($items as $item)
                         <tr>
-                            <td class="width-content">{{ $item->nomenclature()->code .'/'. $item->id }}</td>
+                            <td class="width-content">{{ $item->register_number }}</td>
                             <td>{{ str_limit($item->name, 20) }}</td>
                             <td class="width-content">{{ $item->author()->last_name .' '. str_limit($item->author()->first_name, 1, '.') . str_limit($item->author()->middle_name, 1, '') }}</td>
                             <td class="width-content">{{ $item->created_at }}</td>

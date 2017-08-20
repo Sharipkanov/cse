@@ -58,6 +58,10 @@
                 <div class="uk-margin-large-top">
                     {{ $items->links() }}
                 </div>
+            @else
+                <div class="bg-white boxed uk-margin-top">
+                    <span class="uk-text-small uk-text-uppercase">Список {{ ($type == 'income') ? 'входящих' : 'исходящих'}} документов корреспонденции пуст</span>
+                </div>
             @endif
         </div>
     </div>

@@ -74,7 +74,7 @@
                 </div>
             @else
                 <div class="bg-white boxed uk-margin-top">
-                    <span class="uk-text-small uk-text-uppercase">Список документов пуст</span>
+                    <span class="uk-text-small uk-text-uppercase">Список экспертиз пуст</span>
                 </div>
             @endif
         </div>

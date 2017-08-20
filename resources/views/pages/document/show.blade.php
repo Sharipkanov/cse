@@ -10,6 +10,9 @@
                     @if($item->author()->id == auth()->user()->id && $item->status == 0)
                         <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Соглосовать</button>
                     @endif
+                    @if($item->status == 2 && auth()->user()->id == $item->author()->id && !$item->correspondence() && !$item->task_id)
+                        <button data-uk-toggle="{target:'#task', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Прикрепить карточку задания</button>
+                    @endif
                     @if(auth()->user()->id == $item->author()->id && $item->status > 2)
                         <form action="{{ route('page.document.copy', ['document' => $item->id]) }}" method="post" class="uk-display-inline">
                             {{ csrf_field() }}
@@ -30,6 +33,25 @@
 
             @if($item->status == 0)
                 <form id="approve" action="{{ route('page.document.approve.add', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="approve_add" value="1">
+                    @foreach(array_reverse($leaders) as $key => $leader)
+                        <div class="uk-form-row">
+                            <label class="uk-flex uk-flex-middle">
+                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}"></span>
+                                <span>{{ $leader->last_name }} {{ $leader->first_name }} {{ $leader->middle_name }}</span>
+                            </label>
+                        </div>
+                    @endforeach
+                    <hr>
+                    <div class="uk-form-row uk-text-right">
+                        <button class="uk-button uk-button-success">Отправить на согласование</button>
+                    </div>
+                </form>
+            @endif
+
+            @if(!$item->task_id)
+                <form id="task" action="{{ route('page.document.approve.add', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
                     <input type="hidden" name="approve_add" value="1">
                     @foreach(array_reverse($leaders) as $key => $leader)

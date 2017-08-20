@@ -28,7 +28,6 @@ class CreateUser extends FormRequest
         return [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'middle_name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'department_id' => 'required',
             'position_id' => 'required'
@@ -47,8 +46,6 @@ class CreateUser extends FormRequest
             'first_name.max' => 'Имя не должно превышать 255 символов',
             'last_name.required' => 'Укажите Фамилию пользователя',
             'last_name.max' => 'Фамилия не должна превышать 255 символов',
-            'middle_name.required' => 'Укажите Отчество пользователя',
-            'middle_name.max' => 'Отчество не должно превышать 255 символов',
             'email.required' => 'Укажите электроную почту пользователя',
             'email.email' => 'Электронный адрес должен быть дейсвительным',
             'email.max' => 'Электронный адрес не должен превышать 255 символов',

@@ -244,3 +244,14 @@ footer {
     right: 0;
     top: 0;
 }
+
+.uk-autocomplete {
+    position: relative;
+}
+
+.uk-autocomplete .uk-dropdown {
+    top: calc(100% + 5px);
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+}

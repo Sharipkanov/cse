@@ -17,13 +17,13 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('middle_name');
+            $table->string('middle_name')->nullable()->default(null);
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('branch_id');
             $table->integer('department_id');
             $table->integer('subdivision_id')->default(0);
             $table->integer('position_id');
+            $table->boolean('is_director')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

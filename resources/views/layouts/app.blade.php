@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('bower_components/uikit/css/components/form-file.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/uikit/css/components/form-password.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/uikit/css/components/datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bower_components/uikit/css/components/accordion.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -49,7 +50,10 @@
 
     <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bower_components/uikit/js/uikit.min.js') }}"></script>
+    <script src="{{ asset('bower_components/uikit/js/components/autocomplete.min.js') }}"></script>
     <script src="{{ asset('bower_components/uikit/js/components/datepicker.min.js') }}"></script>
+    <script src="{{ asset('bower_components/uikit/js/components/accordion.min.js') }}"></script>
+    <script src="{{ asset('bower_components/uikit/js/components/timepicker.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

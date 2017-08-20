@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
 use App\Department;
 use App\Http\Requests\CreateUser;
 use App\Position;
@@ -16,11 +15,10 @@ class UsersController extends Controller
         $authenticatedUser = auth()->user();
         $leaders = [];
 
-        $branch = $authenticatedUser->branch();
         $department = $authenticatedUser->department();
         $subdivision = $authenticatedUser->subdivision();
 
-        $branchLeader = ($branch) ? $branch->leader() : null;
+        $branchLeader = $authenticatedUser->director();
         $departmentLeader = ($department) ? $department->leader() : null;
         $subdivisionLeader = ($subdivision) ? $subdivision->leader() : null;
 
@@ -34,14 +32,17 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * Branch $branch
+     * @param User $user
+     * @param Department $department
      * @return \Illuminate\Http\Response
      */
-    public function index(Branch $branch)
+    public function index(User $user, Department $department)
     {
         return response()->view('pages.user.structure', [
             'title' => 'Структура | ' . config('app.name'),
-            'branch' => $branch->find(1)
+            'name' => config('app.name'),
+            'director' => $user->director(),
+            'departments' => $department->departments()
         ]);
     }
 
@@ -57,7 +58,7 @@ class UsersController extends Controller
         return response()->view('pages.user.create', [
             'title' => 'Регистрация пользователя | ' . config('app.name'),
             'positions' => $position->get(),
-            'departments' => $department->where(['parent_id' => 0, 'branch_id' => auth()->user()->branch_id])->get()
+            'departments' => $department->departments()
         ]);
     }
 
@@ -79,7 +80,6 @@ class UsersController extends Controller
         $user->subdivision_id = ($request->has('subdivision_id') ? $request->input('subdivision_id') : 0);
         $user->position_id = $request->input('position_id');
         $user->password = bcrypt('astana2017');
-        $user->branch_id = 1;
 
         $user->save();
 

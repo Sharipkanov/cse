@@ -16,43 +16,36 @@ class DepartmentsTableSeeder extends Seeder
             [
                 'name' => 'АУП',
                 'parent_id' => 0,
-                'branch_id' => 1,
                 'leader_id' => 0
             ],
             [
                 'name' => 'Отдел по судебно-экспертным вопросам',
                 'parent_id' => 0,
-                'branch_id' => 1,
-                'leader_id' => 2
+                'leader_id' => 3
             ],
             [
                 'name' => 'Отдел по судебно-медицинским вопросам',
                 'parent_id' => 0,
-                'branch_id' => 1,
                 'leader_id' => 0
             ],
             [
                 'name' => 'Отдел по общим вопросам',
                 'parent_id' => 0,
-                'branch_id' => 1,
                 'leader_id' => 0
             ],
             [
                 'name' => 'Лаборатория химических и биологических исследований',
                 'parent_id' => 2,
-                'branch_id' => 1,
                 'leader_id' => 0
             ],
             [
                 'name' => 'Лаборатория криминалистических исследований',
                 'parent_id' => 2,
-                'branch_id' => 1,
-                'leader_id' => 3
+                'leader_id' => 4
             ],
             [
                 'name' => 'Лаборатория специальных исследований',
                 'parent_id' => 2,
-                'branch_id' => 1,
                 'leader_id' => 0
             ]
         ];

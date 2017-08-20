@@ -60,6 +60,20 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::get('structure.html', 'UsersController@index')->name('page.structure');
+    Route::group(['prefix' => 'structure'], function() {
+        Route::get('department/create.html', 'DepartmentsController@department_create')->name('page.department.create');
+        Route::post('department/store.html', 'DepartmentsController@department_store')->name('page.department.store');
+
+        Route::get('subdivision/create.html', 'DepartmentsController@subdivision_create')->name('page.subdivision.create');
+        Route::post('subdivision/store.html', 'DepartmentsController@subdivision_store')->name('page.subdivision.store');
+    });
+
+    Route::group(['prefix' => 'task'], function() {
+        Route::get('list.html', 'TasksController@index')->name('page.task.list');
+        Route::get('{task}/show.html', 'TasksController@show')->name('page.task.show');
+        Route::post('store.html', 'TasksController@store')->name('page.task.store');
+        Route::post('{task}/edit.html', 'TasksController@edit')->name('page.task.edit');
+    });
 
     Route::group(['prefix' => 'user'], function() {
         Route::get('create.html', 'UsersController@create')->name('page.user.create');

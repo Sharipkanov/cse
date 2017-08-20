@@ -105,9 +105,7 @@ class CorrespondencesController extends Controller
 
         $correspondence->update();
 
-        $branch = Branch::find(1);
-
-//        Mail::to($branch->leader()->email)->send(new ApproveDocument($correspondence));
+//        Mail::to($authenticatedUser->director()->email)->send(new ApproveDocument($correspondence));
 
         return redirect()->to(route('page.correspondence.show', ['correspondence' => $correspondence->id]));
     }

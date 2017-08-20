@@ -14,15 +14,26 @@ class UsersTableSeeder extends Seeder
     {
         $seeders = [
             [
+                'first_name' => 'Ертай',
+                'last_name' => 'Шарипканов',
+                'middle_name' => 'Серикканович',
+                'email' => 'sharipkanov@gmail.com',
+                'password' => bcrypt('astana2017'),
+                'department_id' => 0,
+                'subdivision_id' => 0,
+                'position_id' => 1,
+                'is_director' => 0
+            ],
+            [
                 'first_name' => 'Жамбыл',
                 'last_name' => 'Бекжанов',
                 'middle_name' => 'Лесбекович',
                 'email' => 'bekzhanov.zhambyl@cse-astana.kz',
                 'password' => bcrypt('astana2017'),
-                'branch_id' => 1,
                 'department_id' => 0,
                 'subdivision_id' => 0,
-                'position_id' => 2
+                'position_id' => 2,
+                'is_director' => 1
             ],
             [
                 'first_name' => 'Галия',
@@ -30,10 +41,10 @@ class UsersTableSeeder extends Seeder
                 'middle_name' => 'Карибаевна',
                 'email' => 'sarsenbayeva.galiya@cse-astana.kz',
                 'password' => bcrypt('astana2017'),
-                'branch_id' => 1,
                 'department_id' => 2,
                 'subdivision_id' => 0,
-                'position_id' => 3
+                'position_id' => 3,
+                'is_director' => 0
             ],
             [
                 'first_name' => 'Багдат',
@@ -41,10 +52,10 @@ class UsersTableSeeder extends Seeder
                 'middle_name' => 'Серикович',
                 'email' => 'tlegenov.bagdat@cse-astana.kz',
                 'password' => bcrypt('astana2017'),
-                'branch_id' => 1,
                 'department_id' => 2,
                 'subdivision_id' => 6,
-                'position_id' => 19
+                'position_id' => 19,
+                'is_director' => 0
             ],
             [
                 'first_name' => 'Еркін',
@@ -52,10 +63,10 @@ class UsersTableSeeder extends Seeder
                 'middle_name' => 'Дүйсенбайұлы',
                 'email' => 'taimas.erkin@cse-astana.kz',
                 'password' => bcrypt('astana2017'),
-                'branch_id' => 1,
                 'department_id' => 2,
                 'subdivision_id' => 6,
-                'position_id' => 6
+                'position_id' => 6,
+                'is_director' => 0
             ],
             [
                 'first_name' => 'Баглан',
@@ -63,10 +74,10 @@ class UsersTableSeeder extends Seeder
                 'middle_name' => 'Рамазаншариповна',
                 'email' => 'nurgozhina.baglan@cse-astana.kz',
                 'password' => bcrypt('astana2017'),
-                'branch_id' => 1,
                 'department_id' => 1,
                 'subdivision_id' => 0,
-                'position_id' => 4
+                'position_id' => 4,
+                'is_director' => 0
             ]
         ];
 

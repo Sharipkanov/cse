@@ -27,9 +27,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function branch()
+    public function director()
     {
-        return $this->belongsTo(Branch::class, 'branch_id', 'id')->first();
+        return $this->where('is_director', 1)->first();
     }
 
     public function department()
