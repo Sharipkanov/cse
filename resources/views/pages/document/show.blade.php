@@ -186,6 +186,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="uk-margin-top">
+                    <div class="uk-grid">
+                        <div class="uk-width-2-6">
+                            <p class="uk-text-bold">Основание:</p>
+                        </div>
+                        <div class="uk-width-4-6">
+                            <p>
+                                @if(!$item->task_id)
+                                    Нет основания
+                                @else
+                                    <a class="" href="{{ route('page.task.show', ['task' => $item->task()->id]) }}">Просмотреть</a>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 @if($item->status && $item->status == 4)
                     <div class="uk-margin-top">
                         <div class="uk-grid">

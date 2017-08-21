@@ -15,4 +15,9 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'executor_id', 'id')->first();
     }
+
+    public function correspondence()
+    {
+        return $this->belongsTo(Correspondence::class, 'correspondence_id', 'id')->first();
+    }
 }

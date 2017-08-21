@@ -165,6 +165,10 @@ footer {
     background-color: #da314b;
 }
 
+.status.default {
+    background-color: #999;
+}
+
 .drop-down {
     display: none;
     padding: 5px;

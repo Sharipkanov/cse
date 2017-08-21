@@ -5,15 +5,17 @@
 @section('page')
     <div class="uk-width-1-1 uk-margin-top">
         <div class="uk-container uk-container-center">
-            <div class="uk-flex uk-flex-middle uk-flex-space-between">
-                <div>
-                    <a href="{{ route('page.department.create') }}" class="uk-button uk-button-primary">Создать отдел</a>
-                    <a href="{{ route('page.subdivision.create') }}" class="uk-button uk-button-primary">Создать подотдел</a>
+            @if(auth()->user()->position_id == 1)
+                <div class="uk-flex uk-flex-middle uk-flex-space-between">
+                    <div>
+                        <a href="{{ route('page.department.create') }}" class="uk-button uk-button-primary">Создать отдел</a>
+                        <a href="{{ route('page.subdivision.create') }}" class="uk-button uk-button-primary">Создать подотдел</a>
+                    </div>
+                    <div>
+                        <a href="{{ route('page.user.create') }}" class="uk-button uk-button-primary">Добавить сотрудника</a>
+                    </div>
                 </div>
-                <div>
-                    <a href="{{ route('page.user.create') }}" class="uk-button uk-button-primary">Добавить сотрудника</a>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
 
@@ -32,6 +34,7 @@
                     @foreach($departments as $department)
                         <li>
                             @if($department->leader_id)
+
                                 <?php $departmentLeader = $department->leader(); ?>
                                 @if($departmentLeader)
                                     <h4>Начальник отдела: {{ $departmentLeader->last_name .' '. str_limit($departmentLeader->first_name, 1, '.') . str_limit($departmentLeader->middle_name, 1, '') }} ({{ $departmentLeader->position()->name }})</h4>
@@ -54,7 +57,7 @@
                                     @foreach($departmentUsers as $departmentUser)
                                         <tr>
                                             <td>{{ $departmentUser->last_name .' '. str_limit($departmentUser->first_name, 1, '.') . str_limit($departmentUser->middle_name, 1, '') }}</td>
-                                            <td class="width-content">{{ $departmentUser->position()->name }}</td>
+                                            <td class="width-content">{{ ($departmentUser->position()) ? $departmentUser->position()->name : '' }}</td>
                                             <td class="width-content"><a href="#" class="uk-button uk-button-success uk-button-small">Просмотреть</a></td>
                                         </tr>
                                     @endforeach
@@ -95,10 +98,10 @@
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                        @foreach($subdivionUsers as $departmentUser)
+                                                                        @foreach($subdivionUsers as $subdivisionUser)
                                                                             <tr>
-                                                                                <td>{{ $departmentUser->last_name .' '. str_limit($departmentUser->first_name, 1, '.') . str_limit($departmentUser->middle_name, 1, '') }}</td>
-                                                                                <td class="width-content">{{ $departmentUser->position()->name }}</td>
+                                                                                <td>{{ $subdivisionUser->last_name .' '. str_limit($subdivisionUser->first_name, 1, '.') . str_limit($subdivisionUser->middle_name, 1, '') }}</td>
+                                                                                <td class="width-content">{{ ($subdivisionUser->position()) ? $subdivisionUser->position()->name : '' }}</td>
                                                                                 <td class="width-content"><a href="#" class="uk-button uk-button-success uk-button-small">Просмотреть</a></td>
                                                                             </tr>
                                                                         @endforeach

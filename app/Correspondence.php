@@ -39,6 +39,6 @@ class Correspondence extends Model
 
     public function document()
     {
-        return $this->belongsTo(Document::class, 'document_id', 'id')->first();
+        return $this->hasOne(Document::class, 'id', 'document_id')->first();
     }
 }

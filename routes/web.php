@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('list.html', 'TasksController@index')->name('page.task.list');
         Route::get('{task}/show.html', 'TasksController@show')->name('page.task.show');
         Route::post('store.html', 'TasksController@store')->name('page.task.store');
+        Route::post('correspondence/store.html', 'TasksController@correspondence_store')->name('page.task.correspondence.store');
         Route::post('{task}/edit.html', 'TasksController@edit')->name('page.task.edit');
         Route::post('task.html', 'TasksController@search_task')->name('page.task.search');
     });

@@ -110,7 +110,7 @@
                                 <label class="uk-form-label">Ответ на исходящий:</label>
                                 <div class="uk-form-controls uk-margin-small-top uk-position-relative">
                                     <input id="correspondence-search-input" type="text" placeholder="Введите шифр или название экспертизы" class="uk-width-1-1{{ $errors->has('reply_correspondence_id') ? ' uk-form-danger' : '' }}" >
-                                    <input type="hidden" name="reply_correspondence_id">
+                                    <input type="hidden" name="reply_correspondence_id" id="correspondence-input">
                                 </div>
                                 <div id="correspondence-drop-down" class="drop-down">
                                 </div>

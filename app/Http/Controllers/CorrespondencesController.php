@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Branch;
 use App\Correspondence;
+use App\Department;
 use App\Document;
 use App\DocumentType;
 use App\File;
 use App\Http\Requests\CreateCorrespondence;
 use App\Http\Requests\CreateOutcomeCorrespondence;
 use App\Language;
+use App\Mail\NewIncomeCorrespondence;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FilesController as Files;
-use phpDocumentor\Reflection\Location;
+use Illuminate\Support\Facades\Mail;
+use App\User;
 
 class CorrespondencesController extends Controller
 {
@@ -62,10 +64,13 @@ class CorrespondencesController extends Controller
 
     public function create_outcome(Language $language, DocumentType $documentType, Document $document)
     {
+        $correspondence = $document->task()->correspondence();
+
         return response()->view('pages.correspondence.create-outcome', [
             'title' => 'Создание регистрационной карточки исходящего документа | ' .config('app.name'),
             'languages' => $language->get(),
-            'document' => $document
+            'document' => $document,
+            'correspondence' => $correspondence
         ]);
     }
 
@@ -105,12 +110,12 @@ class CorrespondencesController extends Controller
 
         $correspondence->update();
 
-//        Mail::to($authenticatedUser->director()->email)->send(new ApproveDocument($correspondence));
+        Mail::to($authenticatedUser->director()->email)->send(new NewIncomeCorrespondence($correspondence));
 
         return redirect()->to(route('page.correspondence.show', ['correspondence' => $correspondence->id]));
     }
 
-    public function store_outcome(CreateOutcomeCorrespondence $request)
+    public function store_outcome(User $user, CreateOutcomeCorrespondence $request)
     {
         $correspondence = new Correspondence();
 
@@ -120,7 +125,13 @@ class CorrespondencesController extends Controller
         $correspondence->executor_fullname = $request->input('executor_fullname');
         $correspondence->document_type_id = $request->input('document_type_id');
         $correspondence->document_id = $request->input('document_id');
+        $correspondence->status = 2;
+        if($request->has('reply_correspondence_id')) $correspondence->reply_correspondence_id = $request->input('reply_correspondence_id');
         $correspondence->save();
+
+        foreach ($user->where('position_id', 4)->get() as $sendUser) {
+            Mail::to($sendUser->email)->send(new NewIncomeCorrespondence($correspondence));
+        }
 
         return redirect()->to(route('page.document.show', ['document' => $correspondence->document_id]));
     }
@@ -129,10 +140,11 @@ class CorrespondencesController extends Controller
      * Display the specified resource.
      *
      * @param File $file
-     * @param  Correspondence $correspondence
+     * @param Department $department
+     * @param Correspondence $correspondence
      * @return \Illuminate\Http\Response
      */
-    public function show(File $file, Correspondence $correspondence)
+    public function show(File $file, Department $department, Correspondence $correspondence)
     {
         if(!$correspondence) return abort(404);
 
@@ -140,13 +152,18 @@ class CorrespondencesController extends Controller
             ? $file->whereIn('id', explode(',', $correspondence->files))->get()
             : [];
 
-        $title = ($correspondence->status)
-            ? 'Исходящий документ: ' . $correspondence->document_type()->name . ' № ' . $correspondence->register_number
-            : 'Регистрация карточки исходящего документа';
+        if($correspondence->is_income) {
+            $title = 'Входящий документ: ' . $correspondence->document_type()->name . ' № ' . $correspondence->register_number;
+        } else {
+            $title = ($correspondence->status != 2)
+                ? 'Исходящий документ: ' . $correspondence->document_type()->name . ' № ' . $correspondence->register_number
+                : 'Регистрация карточки исходящего документа';
+        }
 
         return view('pages.correspondence.show', [
             'title' => $title .' | '.config('app.name'),
-            'item' => $correspondence
+            'item' => $correspondence,
+            'departments' => $department->departments()
         ]);
     }
 
@@ -161,7 +178,7 @@ class CorrespondencesController extends Controller
         if(!$correspondence) return abort(404);
 
         if($request->has('register')) {
-            $correspondence->status = 1;
+            $correspondence->status = 3;
             $correspondence->register_number = $correspondence->document()->nomenclature()->code . '/' . $correspondence->id;
             $correspondence->save();
         }

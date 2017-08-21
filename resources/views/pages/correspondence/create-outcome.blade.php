@@ -30,18 +30,35 @@
                             <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('language_id') }}</p>
                         @endif
 
-                        <div class="uk-margin-top uk-position-relative">
-                            <label class="uk-form-label">Корреспондент:</label>
-                            <div class="uk-form-controls uk-margin-small-top">
-                                <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
-                                <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
+                        @if($correspondence)
+                            <div class="uk-margin-top">
+                                <label class="uk-form-label">Корреспондент:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="hidden" name="correspondent_id" value="{{ $correspondence->correspondent()->id }}">
+                                    <input name="" class="uk-width-1-1" value="{{ $correspondence->correspondent()->name }}" readonly>
+                                </div>
                             </div>
-                            <div class="drop-down" id="correspondent-drop-down">
+                            <div class="uk-margin-top">
+                                <label class="uk-form-label">Ответ на входящий:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="hidden" name="reply_correspondence_id" value="{{ $correspondence->id }}">
+                                    <input name="" class="uk-width-1-1" value="{{ $correspondence->register_number }}" readonly>
+                                </div>
+                            </div>
+                        @else
+                            <div class="uk-margin-top uk-position-relative">
+                                <label class="uk-form-label">Корреспондент:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
+                                    <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
+                                </div>
+                                <div class="drop-down" id="correspondent-drop-down">
 
+                                </div>
                             </div>
-                        </div>
-                        @if ($errors->has('correspondent_id'))
-                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('correspondent_id') }}</p>
+                            @if ($errors->has('correspondent_id'))
+                                <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('correspondent_id') }}</p>
+                            @endif
                         @endif
 
                         <div class="uk-margin-top">
@@ -71,11 +88,7 @@
                         <div class="uk-margin-top">
                             <label class="uk-form-label">Основание</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                @if($document->task_id)
-                                    <a href="{{ route('page.task.show', ['task' => $document->task()->id]) }}" target="_blank">Просмотреть</a>
-                                @else
-                                    <p>Нет основания</p>
-                                @endif
+                                <a href="{{ route('page.document.show', ['document' => $document->id]) }}">Просмотреть</a>
                             </div>
                         </div>
                     </div>

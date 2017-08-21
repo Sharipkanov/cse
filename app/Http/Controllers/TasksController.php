@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Http\Requests\CreateCorrespondeceTask;
 use App\Http\Requests\CreateTask;
 use App\Mail\NewTask;
 use App\User;
@@ -62,13 +63,37 @@ class TasksController extends Controller
         $task->executor_id = $executorId;
         $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
         $task->info = $request->input('info');
-        $task->correspondence_id = ($request->has('correspondence_id')) ? $request->input('correspondence_id') : 0;
         $task->user_id = auth()->user()->id;
 
         $task->save();
 
         $task->register_number = $task->id;
         $task->update();
+
+        Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($task));
+
+        return response()->redirectTo(route('page.task.list'));
+    }
+
+    public function correspondence_store(User $user, CreateCorrespondeceTask $request)
+    {
+        $task = new Task();
+        $executorId = $request->input('executor_id');
+
+        $task->executor_id = $executorId;
+        $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
+        $task->info = $request->input('info');
+        $task->correspondence_id = $request->input('correspondence_id');
+        $task->user_id = auth()->user()->id;
+
+        $task->save();
+
+        $task->register_number = $task->id;
+        $task->update();
+
+        $correspondence = $task->correspondence();
+        $correspondence->status = 1;
+        $correspondence->save();
 
         Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($task));
 

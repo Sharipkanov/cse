@@ -8,7 +8,9 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="uk-flex uk-flex-middle">
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>На регистраций</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status default uk-margin-small-right"></div><small>Не присвоен</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>На исполнении</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистраций</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                 </div>
                 <div>
@@ -39,15 +41,19 @@
                     <tbody>
                         @foreach($items as $item)
                             <tr>
-                                <td class="width-content"></td>
+                                <td class="width-content">{{ $item->register_number }}</td>
                                 <td>{{ $item->executor_fullname }}</td>
                                 <td class="width-content">{{ $item->correspondent()->name }}</td>
                                 <td class="width-content">{{ $item->created_at }}</td>
                                 <td class="width-content uk-text-center">
-                                    @if($item->status)
-                                        <div class="status success"></div>
+                                    @if($item->status == 3)
+                                        <span class="status success uk-margin-small-right"></span>
+                                    @elseif($item->status == 2)
+                                        <span class="status warning uk-margin-small-right"></span>
+                                    @elseif($item->status == 1)
+                                        <span class="status uk-margin-small-right"></span>
                                     @else
-                                        <div class="status"></div>
+                                        <span class="status default"></span>
                                     @endif
                                 </td>
                                 <td class="width-content"><a href="{{ route('page.correspondence.show', ['correspondence' => $item->id]) }}" class="uk-button">Просмотреть</a></td>
