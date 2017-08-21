@@ -246,6 +246,54 @@ $(document).ready(function() {
         });
     });
 
+    var $taskSearchInput = $('#task-search-input'),
+        $taskInput = $('#task-input'),
+        $taskDropDown = $('#task-drop-down');
+
+    $taskSearchInput.keyup(function() {
+        var $input = $(this),
+            inputValue = $input.val();
+
+        $.ajax({
+            type: "POST",
+            url: '/task/task.html',
+            data: {task: inputValue, get_task: 1},
+            success: function(response) {
+                $taskDropDown.removeClass('danger');
+                $taskDropDown.empty();
+
+                for(var i=0; i<response.length; i++) {
+                    var task = response[i];
+
+                    $('<a href="#" class="task-choose" data-id="'+ task['id'] +'">'+ task['name'] +'</a>').appendTo($taskDropDown);
+                }
+
+                if(!$taskDropDown.hasClass('active')) $taskDropDown.addClass('active');
+            },
+            error: function(response) {
+                if(response.status === 422) {
+                    $taskDropDown.addClass('danger');
+                    $taskDropDown.empty();
+                    $('<p>'+ response['responseJSON']['message'] +'</p>').appendTo($taskDropDown);
+
+                    if(!$taskDropDown.hasClass('active')) $taskDropDown.addClass('active');
+                }
+            },
+            dataType: 'json'
+        });
+    });
+
+    $(document).on('click', '.task-choose', function(e) {
+        e.preventDefault();
+
+        var $link = $(this);
+
+        $taskInput.val($link.data('id'));
+        $taskSearchInput.val($link.html());
+
+        $taskDropDown.removeClass('active');
+    });
+
     $(document).on('click', '.correspondent-choose', function(e) {
         e.preventDefault();
 

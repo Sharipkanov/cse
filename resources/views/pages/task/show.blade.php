@@ -12,12 +12,12 @@
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status danger uk-margin-small-right"></div><small>Просрочено</small></div>
                 </div>
                 <div>
-                    @if(count($users) && !$item_assigned && $item->executor_id == auth()->user()->id)
+                    @if(count($users) && !$item_assigned && $item->executor_id == auth()->user()->id && !$item->status)
                         <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#task-toggle',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Переназначить карточку задания</button>
                     @endif
                 </div>
             </div>
-            @if(count($users) && !$item_assigned)
+            @if(count($users) && !$item_assigned && !$item->status)
                 <div id="task-toggle" class="uk-margin-top {{ ($errors->any()) ? '' : ' uk-hidden' }}">
                     <form action="{{ route('page.task.edit', ['task' => $item->id]) }}" class="uk-form" method="post">
                         <input type="hidden" name="parent_id" value="{{ $item->id }}">

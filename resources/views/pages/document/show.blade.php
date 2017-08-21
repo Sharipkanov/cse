@@ -51,20 +51,22 @@
             @endif
 
             @if(!$item->task_id)
-                <form id="task" action="{{ route('page.document.approve.add', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
+                <form id="task" action="{{ route('page.document.task.set', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
-                    <input type="hidden" name="approve_add" value="1">
-                    @foreach(array_reverse($leaders) as $key => $leader)
-                        <div class="uk-form-row">
-                            <label class="uk-flex uk-flex-middle">
-                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}"></span>
-                                <span>{{ $leader->last_name }} {{ $leader->first_name }} {{ $leader->middle_name }}</span>
-                            </label>
+                    <input type="hidden" name="task_id" value="">
+                    <div class="uk-margin-top uk-position-relative">
+                        <label class="uk-form-label">Карточка задания:</label>
+                        <div class="uk-form-controls uk-margin-small-top">
+                            <input type="text" name="" id="task-search-input" placeholder="Введите регистрационный номер картички" class="uk-width-1-1{{ ($errors->has('task_id')) ? ' uk-form-danger' : '' }}">
+                            <input type="hidden" name="task_id"  value="" id="task-input">
                         </div>
-                    @endforeach
+                        <div class="drop-down" id="task-drop-down">
+
+                        </div>
+                    </div>
                     <hr>
                     <div class="uk-form-row uk-text-right">
-                        <button class="uk-button uk-button-success">Отправить на согласование</button>
+                        <button class="uk-button uk-button-success">Присвоить карточку задания</button>
                     </div>
                 </form>
             @endif

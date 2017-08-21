@@ -23,7 +23,6 @@ class CreateDocumentsTable extends Migration
             $table->text('info')->nullable()->default(null);
             $table->integer('user_id');
             $table->integer('task_id')->default(0);
-            $table->integer('correspondence_id')->default(0);
             $table->integer('expertise_id')->default(0);
             $table->integer('parent_id')->default(0);
             $table->tinyInteger('status')->default(0);

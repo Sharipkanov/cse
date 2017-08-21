@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Document::class, DocumentPermission::class, 'user_id', 'id', 'id')->paginate(15);
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'executor_id', 'id');
+    }
 }

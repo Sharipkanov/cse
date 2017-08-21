@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('{document}/approve/add.html', 'DocumentsController@approve_add')->name('page.document.approve.add');
         Route::post('{document}/update.html', 'DocumentsController@update')->name('page.document.update');
         Route::post('{document}/approve/{documentApprove}/answer.html', 'DocumentsController@approve_answer')->name('page.document.approve.answer');
+        Route::post('{document}/task/set.html', 'DocumentsController@set_task')->name('page.document.task.set');
     });
 
     Route::group(['prefix' => 'expertise'], function() {
@@ -73,6 +74,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('{task}/show.html', 'TasksController@show')->name('page.task.show');
         Route::post('store.html', 'TasksController@store')->name('page.task.store');
         Route::post('{task}/edit.html', 'TasksController@edit')->name('page.task.edit');
+        Route::post('task.html', 'TasksController@search_task')->name('page.task.search');
     });
 
     Route::group(['prefix' => 'user'], function() {

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateDocument;
 use App\Mail\ApproveDocument;
 use App\Mail\DocumentApproved;
 use App\Mail\DocumentDeclined;
+use App\Task;
 use App\User;
 use Illuminate\Http\Request;
 use App\Document;
@@ -174,6 +175,25 @@ class DocumentsController extends Controller
         }
 
         return redirect()->to(route('page.document.show', ['document' => $document->id]));
+    }
+
+    public function set_task(Request $request, Task $task, Document $document)
+    {
+        $document->task_id = $request->input('task_id');
+
+        $document->save();
+
+        $task->where('parent_id', $document->task()->parent_id)
+            ->orWhere('id', $document->task()->parent_id)
+            ->update([
+                'status' => 1
+            ]);
+
+        return redirect()->back();
+
+        /*$task->where(['parent_id' => $task->parent_id])->orWhere('id', $task->parent_id)->update([
+            'status' => 1
+        ]);*/
     }
 
     public function approve_answer(Request $request, Document $document, DocumentApprove $documentApprove)

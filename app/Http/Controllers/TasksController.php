@@ -137,6 +137,17 @@ class TasksController extends Controller
         return response()->redirectTo(route('page.task.show', ['task' => $task]));
     }
 
+    public function search_task(Request $request)
+    {
+        if($request->has('get_task')) {
+            $result = auth()->user()->tasks()->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('task') .'%')->get();
+
+            if(count($result)) return response()->json($result, 200);
+
+            return response()->json(['message' => 'Нет совпадений'], 422);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *

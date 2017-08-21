@@ -68,9 +68,18 @@
                                 <input type="hidden" name="document_id" value="{{ $document->id }}">
                             </div>
                         </div>
+                        <div class="uk-margin-top">
+                            <label class="uk-form-label">Основание</label>
+                            <div class="uk-form-controls uk-margin-small-top">
+                                @if($document->task_id)
+                                    <a href="{{ route('page.task.show', ['task' => $document->task()->id]) }}" target="_blank">Просмотреть</a>
+                                @else
+                                    <p>Нет основания</p>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                    <hr>
-                    <div class="uk-text-right">
+                    <div class="uk-text-right uk-margin-top">
                         <button type="submit" class="uk-button uk-button-success">Создать карточку</button>
                     </div>
                 </fieldset>

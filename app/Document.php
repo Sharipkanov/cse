@@ -30,4 +30,9 @@ class Document extends Model
     {
         return $this->belongsTo(Correspondence::class, 'id', 'document_id')->first();
     }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class, 'task_id', 'id')->first();
+    }
 }
