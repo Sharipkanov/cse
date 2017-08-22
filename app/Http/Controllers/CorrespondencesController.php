@@ -9,8 +9,10 @@ use App\DocumentType;
 use App\File;
 use App\Http\Requests\CreateCorrespondence;
 use App\Http\Requests\CreateOutcomeCorrespondence;
+use App\Http\Requests\RegisterNumbers;
 use App\Language;
 use App\Mail\NewIncomeCorrespondence;
+use App\RegisterNumber;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FilesController as Files;
 use Illuminate\Support\Facades\Mail;
@@ -218,5 +220,27 @@ class CorrespondencesController extends Controller
 
             return response()->json(['message' => 'Нет совпадений'], 422);
         }
+    }
+
+    public function number_register(RegisterNumbers $request)
+    {
+        $is_income = $request->input('is_income');
+        $lastCorrespondence = Correspondence::where('is_income', $is_income)->orderBy('created_at', 'desc')->first();
+        $registerNumber = null;
+
+        if(!$lastCorrespondence) $registerNumber = 1;
+        else {
+            $lastCorrespondenceRegNumber = explode('/', $lastCorrespondence->register_number);
+            $registerNumber = $lastCorrespondenceRegNumber[1] + 1;
+        }
+
+        for ($i=0; $i<(int) $request->input('count'); $i++) {
+            $number = new RegisterNumber();
+            $number->number = $registerNumber + $i;
+            $number->is_income = $request->input('is_income');
+            $number->save();
+        }
+
+        return redirect()->back();
     }
 }

@@ -21,6 +21,10 @@ footer {
     margin: auto;
 }
 
+.uk-container {
+    min-width: 1200px;
+}
+
 .uk-navbar {
     background-color: #fff;
 }

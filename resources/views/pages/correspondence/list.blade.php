@@ -17,10 +17,29 @@
                     @if($type == 'income' && auth()->user()->position_id == 4)
                         <a href="{{ route('page.correspondence.income.create') }}" class="uk-button uk-button-success">Создать регистрационную карточку входящего документа</a>
                     @endif
-                    {{--<a href="#" class="uk-button uk-button-primary">Зарезервировать регистрационный номер</a>--}}
+                    <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register-number'}">Зарезервировать номер</button>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="uk-container uk-container-center">
+        <form action="{{ route('page.correspondents.number.register') }}" class="uk-margin-top uk-form" method="post">
+            {{ csrf_field() }}
+            <input type="hidden" name="is_income" value="{{ ($type == 'income') ? 1 : 0 }}">
+            <div>
+                <label>Количество номеров</label>
+                <div class="uk-margin-small-top">
+                    <input type="text" name="count" value="{{ old('count') }}" class="uk-width-1-1">
+                </div>
+            </div>
+            @if ($errors->has('count'))
+                <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('count') }}</p>
+            @endif
+            <div class="uk-margin-top uk-text-right">
+                <button class="uk-button uk-button-success">Зарезервировать</button>
+            </div>
+        </form>
     </div>
 
     <div class="uk-width-1-1 uk-margin-top">
@@ -65,7 +84,7 @@
                     {{ $items->links() }}
                 </div>
             @else
-                <div class="bg-white boxed uk-margin-top">
+                <div class="bg-white boxed">
                     <span class="uk-text-small uk-text-uppercase">Список {{ ($type == 'income') ? 'входящих' : 'исходящих'}} документов корреспонденции пуст</span>
                 </div>
             @endif

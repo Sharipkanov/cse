@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('outcome/store.html', 'CorrespondencesController@store_outcome')->name('page.correspondence.store.outcome');
         Route::post('correspondence.html', 'CorrespondencesController@correspondence')->name('page.correspondence');
         Route::post('correspondent.html', 'CorrespondentsController@get')->name('page.correspondence.correspondent');
+        Route::post('number/register.html', 'CorrespondentsController@number_register')->name('page.correspondents.number.register');
     });
 
     Route::get('structure.html', 'UsersController@index')->name('page.structure');
