@@ -28,6 +28,8 @@
                     </a>
                     <div class="uk-navbar-flip">
                         <form action="{{ route('logout.action') }}" class="uk-display-inline" method="post">
+                            <span>{{ auth()->user()->last_name .' '. str_limit(auth()->user()->first_name, 1, '.') . str_limit(auth()->user()->middle_name, 1, '') }}</span>
+                            <span class="uk-margin-small-right uk-margin-small-left">|</span>
                             {{ csrf_field() }}
                             <button class="uk-button-link" type="submit">Выход</button>
                         </form>

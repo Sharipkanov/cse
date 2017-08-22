@@ -8,27 +8,45 @@
             <div class="uk-flex uk-flex-space-between">
                 <div>
                     <div class="uk-flex uk-flex-middle">
-                        <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status default uk-margin-small-right"></div><small>Не присвоен</small></div>
-                        <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>На исполнении</small></div>
+                        <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Зарегистрирован (Не присвоен)</small></div>
                         <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистраций</small></div>
                         <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                     </div>
                 </div>
                 <div>
                     @if(auth()->user()->position_id == 4 && $item->status == 2 && !$item->is_income)
-                        <form action="{{ route('page.correspondence.edit', ['correspondence' => $item->id]) }}" class="uk-display-inline" method="post">
-                            {{ csrf_field() }}
-                            <input type="hidden" name="register" value="1">
-                            <button type="submit" class="uk-button uk-button-success">Зарегистрировать</button>
-                        </form>
+                        <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Присвоить решистрационный номер</button>
                     @endif
-                    @if(auth()->user()->position_id == 2 && !$item->status)
+                    @if(auth()->user()->position_id == 2 && $item->status == 1)
                         <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#task-toggle',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Создать карточку задания</button>
                     @endif
                 </div>
             </div>
 
-            @if(auth()->user()->position_id == 2 && !$item->status)
+            @if(auth()->user()->position_id == 4 && $item->status == 2 && !$item->is_income)
+                <form id="register" action="{{ route('page.correspondence.edit', ['correspondence' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="register" value="1">
+                    <div class="uk-margin-top">
+                        <label class="uk-form-label">Регистрационный номер</label>
+                        <div class="uk-form-controls uk-margin-small-top">
+                            <select class="uk-width-1-1" name="register_number">
+                                <option value="0">Не выбрано</option>
+                                @if(count($register_numbers))
+                                    @foreach($register_numbers as $register_number)
+                                        <option value="{{ $register_number->number }}" {{ (old('register_number') == $register_number->number) ? 'selected' : '' }}>{{ $register_number->number }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                    <div class="uk-text-right uk-margin-top">
+                        <button type="submit" class="uk-button uk-button-success">Зарегистрировать</button>
+                    </div>
+                </form>
+            @endif
+
+            @if(auth()->user()->position_id == 2 && $item->status == 1)
                 <div id="task-toggle" class="uk-margin-top {{ ($errors->any()) ? '' : ' uk-hidden' }}">
                     <form action="{{ route('page.task.correspondence.store') }}" class="uk-form" method="post">
                         {{ csrf_field() }}
@@ -54,7 +72,7 @@
                         <div class="uk-form-row">
                             <label class="uk-form-label">Укажите срок исполнения</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <input type="text" value="{{ old('execution_date') }}" class="uk-width-1-1" name="execution_date" placeholder="Выберите cрок исполнения" data-uk-datepicker="{minDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
+                                <input type="text" value="{{ old('execution_date') }}" class="uk-width-1-1" name="execution_date" placeholder="Выберите cрок исполнения" data-uk-datepicker="{minDate: '{{ date('Y-m-d') }}', {{ (($item->execution_period) ? 'maxDate: '. '"' . $item->execution_period .'",' : '') }} format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                             </div>
                         </div>
                         @if ($errors->has('execution_date'))
@@ -83,25 +101,6 @@
                         </div>
                     </form>
                 </div>
-            @endif
-
-            @if($item->status == 3)
-                <form id="approve" action="{{ route('page.document.approve.add', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="approve_add" value="1">
-                    {{--@foreach(array_reverse($leaders) as $key => $leader)
-                        <div class="uk-form-row">
-                            <label class="uk-flex uk-flex-middle">
-                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}:{{$key + 1}}"></span>
-                                <span>{{ $leader->last_name }} {{ $leader->first_name }} {{ $leader->middle_name }}</span>
-                            </label>
-                        </div>
-                    @endforeach--}}
-                    <hr>
-                    <div class="uk-form-row uk-text-right">
-                        <button class="uk-button uk-button-success">Отправить на согласование</button>
-                    </div>
-                </form>
             @endif
 
             <div class="uk-form uk-margin-top uk-margin-large-bottom">
@@ -238,7 +237,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Ответ на {{ ($item->is_income) ? 'исходящийй' : 'входящий'}}:</p>
+                                <p class="uk-text-bold">Ответ на {{ ($item->is_income) ? 'исходящий' : 'входящий'}}:</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p><a href="{{ route('page.correspondence.show', ['correspondence' => $item->reply_correspondence()->id]) }}">Просмотреть</a></p>
@@ -290,8 +289,6 @@
                                     <span class="status warning uk-margin-small-right"></span>
                                 @elseif($item->status == 1)
                                     <span class="status uk-margin-small-right"></span>
-                                @else
-                                    <span class="status default"></span>
                                 @endif
                             </p>
                         </div>

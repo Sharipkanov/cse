@@ -56,4 +56,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'executor_id', 'id');
     }
+
+    public function income_registered_numbers()
+    {
+        return $this->hasMany(RegisterNumber::class, 'user_id', 'id')->where('is_income', 1)->get();
+    }
+
+    public function outcome_registered_numbers()
+    {
+        return $this->hasMany(RegisterNumber::class, 'user_id', 'id')->where('is_income', 0)->get();
+    }
 }

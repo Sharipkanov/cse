@@ -136,6 +136,19 @@
                             @if ($errors->has('document_type_id'))
                                 <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('document_type_id') }}</p>
                             @endif
+                            <div class="uk-margin-top">
+                                <label class="uk-form-label">Регистрационный номер</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <select class="uk-width-1-1" name="register_number">
+                                        <option value="0">Не выбрано</option>
+                                        @if(count($register_numbers))
+                                            @foreach($register_numbers as $register_number)
+                                                <option value="{{ $register_number->number }}" {{ (old('register_number') == $register_number->number) ? 'selected' : '' }}>{{ $register_number->number }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
                             <input type="hidden" name="is_income" value="1">
                         </div>
                     </div>

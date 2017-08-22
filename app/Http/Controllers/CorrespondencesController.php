@@ -41,7 +41,7 @@ class CorrespondencesController extends Controller
 
         return view('pages.correspondence.list', [
             'title' => 'Корреспонденция | РГКП "Центр судебных экспертиз"',
-            'items' => $correspondenceList->paginate(),
+            'items' => $correspondenceList->orderBy('created_at', 'desc')->paginate(),
             'navigation' => $navigation,
             'type' => $type
         ]);
@@ -60,7 +60,8 @@ class CorrespondencesController extends Controller
         return response()->view('pages.correspondence.create', [
             'title' => 'Создание регистрационной карточки входящего документа | ' .config('app.name'),
             'languages' => $language->get(),
-            'documentTypes' => $documentType->get()
+            'documentTypes' => $documentType->get(),
+            'register_numbers' => auth()->user()->income_registered_numbers()
         ]);
     }
 
@@ -86,6 +87,7 @@ class CorrespondencesController extends Controller
     {
         $authenticatedUser = auth()->user();
         $correspondence = new Correspondence();
+        $is_income = $request->input('is_income');
 
         $correspondence->language_id = $request->input('language_id');
         $correspondence->correspondent_id = $request->input('correspondent_id');
@@ -95,11 +97,21 @@ class CorrespondencesController extends Controller
         $correspondence->recipient_id = 1;
         $correspondence->document_type_id = $request->input('document_type_id');
         $correspondence->user_id = $authenticatedUser->id;
-        $correspondence->is_income = $request->input('is_income');
+        $correspondence->is_income = $is_income;
+        $correspondence->status = 1;
 
         if($request->has('executor_fullname')) $correspondence->executor_fullname = $request->input('executor_fullname');
         if($request->has('execution_period')) $correspondence->execution_period = $request->input('execution_period');
         if($request->has('reply_correspondence_id')) $correspondence->reply_correspondence_id = $request->input('reply_correspondence_id');
+
+        $register_code = '17-01-09/';
+        $register_number = $request->input('register_number');
+
+        if(!$register_number) $register_number = $this->set_register_number(0, $is_income);
+
+        $register_code = $register_code . $register_number;
+
+        $correspondence->register_number = $register_code;
 
         $correspondence->save();
 
@@ -107,8 +119,6 @@ class CorrespondencesController extends Controller
             $fileStoreFolder = 'correspondence/' . $correspondence->id;
             $correspondence->files = implode(',', Files::upload($request->file('files'), $fileStoreFolder));
         }
-
-        $correspondence->register_number = '17-01-09/' . $correspondence->id;
 
         $correspondence->update();
 
@@ -149,6 +159,7 @@ class CorrespondencesController extends Controller
     public function show(File $file, Department $department, Correspondence $correspondence)
     {
         if(!$correspondence) return abort(404);
+        $register_numbers = null;
 
         $correspondence->fileList = ($correspondence->files)
             ? $file->whereIn('id', explode(',', $correspondence->files))->get()
@@ -160,12 +171,15 @@ class CorrespondencesController extends Controller
             $title = ($correspondence->status != 2)
                 ? 'Исходящий документ: ' . $correspondence->document_type()->name . ' № ' . $correspondence->register_number
                 : 'Регистрация карточки исходящего документа';
+
+            $register_numbers = auth()->user()->outcome_registered_numbers();
         }
 
         return view('pages.correspondence.show', [
             'title' => $title .' | '.config('app.name'),
             'item' => $correspondence,
-            'departments' => $department->departments()
+            'departments' => $department->departments(),
+            'register_numbers' => $register_numbers
         ]);
     }
 
@@ -181,7 +195,16 @@ class CorrespondencesController extends Controller
 
         if($request->has('register')) {
             $correspondence->status = 3;
-            $correspondence->register_number = $correspondence->document()->nomenclature()->code . '/' . $correspondence->id;
+
+            $register_code = $correspondence->document()->nomenclature()->code . '/';
+            $register_number = $request->input('register_number');
+
+            if(!$register_number) $register_number = $this->set_register_number(0, 0);
+
+            $register_code = $register_code . $register_number;
+
+            $correspondence->register_number = $register_code;
+
             $correspondence->save();
         }
 
@@ -214,7 +237,8 @@ class CorrespondencesController extends Controller
     public function correspondence(Request $request, Correspondence $correspondence)
     {
         if($request->has('correspondence')) {
-            $result = $correspondence->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('correspondence') .'%')->get();
+            $result = $correspondence->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('correspondence') .'%')
+                ->where('is_income', 0)->get();
 
             if(count($result)) return response()->json($result, 200);
 
@@ -238,9 +262,39 @@ class CorrespondencesController extends Controller
             $number = new RegisterNumber();
             $number->number = $registerNumber + $i;
             $number->is_income = $request->input('is_income');
+            $number->user_id = auth()->user()->id;
             $number->save();
         }
 
         return redirect()->back();
+    }
+
+    private function set_register_number($number, $is_income)
+    {
+        $user = auth()->user();
+
+        if(!$number) {
+            $lastCorrespondence = Correspondence::select('register_number')->where('is_income', $is_income);
+
+            if(!$is_income) $lastCorrespondence = $lastCorrespondence->whereNotNull('register_number');
+
+            $lastCorrespondence = $lastCorrespondence->orderBy('created_at', 'desc')->first();
+
+            if($lastCorrespondence) {
+                return $this->set_register_number(explode('/', $lastCorrespondence->register_number)[1] + 1, $is_income);
+            } else {
+                $lastRegisterNumber = RegisterNumber::select('number')->where(['user_id' => $user->id, 'is_income' => $is_income])->orderBy('number', 'desc')->first();
+
+                return ($lastRegisterNumber) ? $lastRegisterNumber->number + 1 : 1;
+            }
+        } else {
+            $exists = RegisterNumber::where(['number' => $number, 'is_income' => $is_income, 'user_id' => $user->id])->exists();
+
+            if($exists) {
+                return $this->set_register_number($number + 1, $is_income);
+            }
+        }
+
+        return $number;
     }
 }

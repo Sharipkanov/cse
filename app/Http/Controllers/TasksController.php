@@ -24,17 +24,32 @@ class TasksController extends Controller
     {
         $user = auth()->user();
         $tasks = null;
+        $executors = [];
 
         if($user->id == $user->director()->id) {
             $tasks = $task->where('user_id', $user->id);
+
+            foreach ($department->departments() as $value) {
+                if($value->leader_id) {
+                    array_push($executors, $value->leader());
+                }
+            }
         } else {
             $tasks = $tasks = $task->where('executor_id', $user->id);
+
+            if($user->id == $user->department()->leader_id) {
+                foreach ($user->department()->subdivisions() as $value) {
+                    if($value->leader_id) {
+                        array_push($executors, $value->leader());
+                    }
+                }
+            } elseif($user->subdivision()) $executors = $user->subdivision()->subdivision_users();
         }
 
         return view('pages.task.list', [
             'title' => 'Контроль | ' . config('app.name'),
             'items' => $tasks->paginate(15),
-            'departments' => $department->departments()
+            'executors' => $executors
         ]);
     }
 
@@ -92,7 +107,7 @@ class TasksController extends Controller
         $task->update();
 
         $correspondence = $task->correspondence();
-        $correspondence->status = 1;
+        $correspondence->status = 3;
         $correspondence->save();
 
         Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($task));
@@ -165,7 +180,8 @@ class TasksController extends Controller
     public function search_task(Request $request)
     {
         if($request->has('get_task')) {
-            $result = auth()->user()->tasks()->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('task') .'%')->get();
+            $result = auth()->user()->tasks()->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('task') .'%')
+                ->where('executor_id', auth()->user()->id)->get();
 
             if(count($result)) return response()->json($result, 200);
 

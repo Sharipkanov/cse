@@ -12,25 +12,23 @@
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status danger uk-margin-small-right"></div><small>Просрочено</small></div>
                 </div>
                 <div>
-                    @if(auth()->user()->position_id == 2)
+                    @if(in_array(auth()->user()->position_id, [2, 3, 24, 19]))
                         <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#task-toggle',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Создать карточку задания</button>
                     @endif
                 </div>
             </div>
-            @if(auth()->user()->position_id == 2)
+            @if(in_array(auth()->user()->position_id, [2, 3, 24, 19]))
                 <div id="task-toggle" class="uk-margin-top {{ ($errors->any()) ? '' : ' uk-hidden' }}">
                     <form action="{{ route('page.task.store') }}" class="uk-form" method="post">
                         {{ csrf_field() }}
-                        @if($departments)
+                        @if(count($executors))
                             <div class="uk-form-row">
                                 <label class="uk-form-label">Укажите срок исполнения</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <select name="executor_id" class="uk-width-1-1">
                                         <option value="">Выберите исполнителя</option>
-                                        @foreach($departments as $department)
-                                            @if($department->leader_id)
-                                                <option value="{{ $department->leader()->id }}" {{ (old('executor_id') == $department->leader()->id) ? 'selected' : ''}}>{{ $department->leader()->last_name }} {{ $department->leader()->first_name }} {{ $department->leader()->middle_name }}</option>
-                                            @endif
+                                        @foreach($executors as $executor)
+                                            <option value="{{ $executor->id }}" {{ (old('executor_id') == $executor->id) ? 'selected' : ''}}>{{ $executor->last_name }} {{ $executor->first_name }} {{ $executor->middle_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

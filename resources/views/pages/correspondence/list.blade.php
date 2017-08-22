@@ -8,41 +8,44 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="uk-flex uk-flex-middle">
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status default uk-margin-small-right"></div><small>Не присвоен</small></div>
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>На исполнении</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Зарегистрирован (Не присвоен)</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистраций</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                 </div>
                 <div>
-                    @if($type == 'income' && auth()->user()->position_id == 4)
-                        <a href="{{ route('page.correspondence.income.create') }}" class="uk-button uk-button-success">Создать регистрационную карточку входящего документа</a>
+                    @if(auth()->user()->position_id == 4)
+                        @if($type == 'income')
+                            <a href="{{ route('page.correspondence.income.create') }}" class="uk-button uk-button-success">Создать регистрационную карточку входящего документа</a>
+                        @endif
+                        <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register-number', animation:'uk-animation-slide-right, uk-animation-slide-right'}">Зарезервировать номер</button>
                     @endif
-                    <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register-number'}">Зарезервировать номер</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="uk-container uk-container-center">
-        <form action="{{ route('page.correspondents.number.register') }}" class="uk-margin-top uk-form" method="post">
-            {{ csrf_field() }}
-            <input type="hidden" name="is_income" value="{{ ($type == 'income') ? 1 : 0 }}">
-            <div>
-                <label>Количество номеров</label>
-                <div class="uk-margin-small-top">
-                    <input type="text" name="count" value="{{ old('count') }}" class="uk-width-1-1">
+    @if(auth()->user()->position_id == 4)
+        <div class="uk-container uk-container-center uk-hidden" id="register-number">
+            <form action="{{ route('page.number.register') }}" class="uk-margin-top uk-form" method="post">
+                {{ csrf_field() }}
+                <input type="hidden" name="is_income" value="{{ ($type == 'income') ? 1 : 0 }}">
+                <div>
+                    <label>Количество номеров</label>
+                    <div class="uk-margin-small-top">
+                        <input type="text" name="count" value="{{ old('count') }}" class="uk-width-1-1">
+                    </div>
                 </div>
-            </div>
-            @if ($errors->has('count'))
-                <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('count') }}</p>
-            @endif
-            <div class="uk-margin-top uk-text-right">
-                <button class="uk-button uk-button-success">Зарезервировать</button>
-            </div>
-        </form>
-    </div>
+                @if ($errors->has('count'))
+                    <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('count') }}</p>
+                @endif
+                <div class="uk-margin-top uk-text-right">
+                    <button class="uk-button uk-button-success">Зарезервировать</button>
+                </div>
+            </form>
+        </div>
+    @endif
 
-    <div class="uk-width-1-1 uk-margin-top">
+    <div class="uk-width-1-1 uk-margin-top uk-margin-bottom">
         <div class="uk-container uk-container-center">
 
             @if(count($items))

@@ -33,6 +33,10 @@ footer {
     background-color: #2c3c4d;
 }
 
+.uk-navbar-flip {
+    color: #fff;
+}
+
 .uk-navbar-flip form button {
     margin-top: 10px;
     color: #fff!important;

@@ -13,7 +13,7 @@ class RegisterNumbers extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return (auth()->check() && auth()->user()->position_id == 4) ? true : false;
     }
 
     /**
@@ -24,7 +24,20 @@ class RegisterNumbers extends FormRequest
     public function rules()
     {
         return [
-            //
+            'count' => 'required|numeric'
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'count.required' => 'Укажите количество номеров для резервирования',
+            'count.numeric' => 'Количество номеров должно быть числовым'
         ];
     }
 }
