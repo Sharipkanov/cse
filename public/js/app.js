@@ -318,4 +318,18 @@ $(document).ready(function() {
             $input.val("09:00");
         }
     });
+
+    $(document).on('change', '.speciality-checkbox', function() {
+        var $currentCheckbox = $(this),
+            $currentCheckboxState = $(this).prop('checked'),
+            $currentCheckboxConnected = $('[data-speciality="'+ $currentCheckbox.data('speciality') +'"]');
+
+        if($currentCheckboxState) {
+            $currentCheckboxConnected.not($currentCheckbox).prop('checked', false);
+            $currentCheckboxConnected.not($currentCheckbox).closest('label').hide();
+        } else {
+            $currentCheckboxConnected.prop('checked', false);
+            $currentCheckboxConnected.not($currentCheckbox).closest('label').show();
+        }
+    });
 });

@@ -7,8 +7,8 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-space-between">
                 <div>
-                    @if(auth()->user()->position_id == 2 && $item->status == 0)
-                        <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Соглосовать</button>
+                    @if(count($executors))
+                        <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
                     @endif
                 </div>
                 <div>
@@ -16,21 +16,29 @@
                 </div>
             </div>
 
-            @if($item->status == 0)
-                <form id="approve" action="{{ route('page.document.approve.add', ['document' => $item->id]) }}" class="uk-form uk-margin-top uk-hidden" method="post">
+            @if(count($executors))
+                <form id="approve" action="{{ route('page.expertise.task.store') }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
-                    <input type="hidden" name="approve_add" value="1">
-                    {{--@foreach(array_reverse($leaders) as $key => $leader)
+                    <input type="hidden" name="expertise_id" value="{{ $item->id }}">
+                    @foreach($executors as $executor)
                         <div class="uk-form-row">
                             <label class="uk-flex uk-flex-middle">
-                                <span class="uk-margin-small-right"><input type="checkbox" name="approvers[]" value="{{ $leader->id }}:{{$key + 1}}"></span>
-                                <span>{{ $leader->last_name }} {{ $leader->first_name }} {{ $leader->middle_name }}</span>
+                                <span class="uk-margin-small-right"><input type="checkbox" name="execute[{{ $executor['leader']->id }}][executor]" value="{{ $executor['leader']->id }}"></span>
+                                <span>{{ $executor['leader']->last_name }} {{ $executor['leader']->first_name }} {{ $executor['leader']->middle_name }}</span>
                             </label>
+                            @foreach($executor['specialities'] as $speciality)
+                                <div class="uk-margin-left uk-margin-small-top">
+                                    <label class="uk-flex uk-flex-middle">
+                                        <span class="uk-margin-small-right"><input type="checkbox" name="execute[{{ $executor['leader']->id }}][specialities][]" value="{{ $speciality->id }}" class="speciality-checkbox" data-speciality="{{ $speciality->id }}"></span>
+                                        <span>{{ $speciality->code .' - '. $speciality->name }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
-                    @endforeach--}}
+                    @endforeach
                     <hr>
                     <div class="uk-form-row uk-text-right">
-                        <button class="uk-button uk-button-success">Отправить на согласование</button>
+                        <button class="uk-button uk-button-success">Поручить</button>
                     </div>
                 </form>
             @endif
@@ -117,17 +125,6 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Первичный статус:</p>
-                        </div>
-                        <div class="uk-width-4-6">
-                            <p>{{ $item->primary_status()->name }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="uk-margin-top">
-                    <div class="uk-grid">
-                        <div class="uk-width-2-6">
                             <p class="uk-text-bold">Статус:</p>
                         </div>
                         <div class="uk-width-4-6">
@@ -154,7 +151,9 @@
                         </div>
                         <div class="uk-width-4-6">
                             <ul class="uk-list">
-                                <li><span></span></li>
+                                @foreach($item->specialities as $speciality)
+                                    <li><span>{{ $speciality->code .' - '. $speciality->name }}</span></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

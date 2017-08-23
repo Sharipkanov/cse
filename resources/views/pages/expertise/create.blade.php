@@ -68,21 +68,6 @@
                                     <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('article_number') }}</p>
                                 @endif
                                 <div class="uk-margin-top">
-                                    <label class="uk-form-label">Первичный статус:</label>
-                                    <div class="uk-form-controls uk-margin-small-top">
-                                        <select class="uk-width-1-1{{($errors->has('expertise_primary_status')) ? ' uk-form-danger' : ''}}" name="expertise_primary_status">
-                                            <option value="" {{ (old('expertise_primary_status') == '') ? 'selected' : '' }} disabled>Выберите первичный статус</option>
-                                            @foreach($statuses[1] as $status)
-                                                <option value="{{ $status->id }}" {{ (old('expertise_primary_status') == $status->id) ? 'selected' : '' }}>{{ $status->name }}</option>
-                                            @endforeach
-                                            <?php unset($status); ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                @if ($errors->has('expertise_primary_status'))
-                                    <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('expertise_primary_status') }}</p>
-                                @endif
-                                <div class="uk-margin-top">
                                     <label class="uk-form-label">Статус:</label>
                                     <div class="uk-form-controls uk-margin-small-top">
                                         <select class="uk-width-1-1{{($errors->has('expertise_status')) ? ' uk-form-danger' : ''}}" name="expertise_status">
@@ -226,7 +211,7 @@
                     </div>
                     <hr>
                     <div class="uk-text-right">
-                        <button type="submit" class="uk-button uk-button-success">Создать документ</button>
+                        <button type="submit" class="uk-button uk-button-success">Создать экспертизу</button>
                     </div>
                 </fieldset>
             </form>

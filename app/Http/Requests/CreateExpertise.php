@@ -34,7 +34,6 @@ class CreateExpertise extends FormRequest
             'case_number' => 'required',
             'category_id' => 'required',
             'article_number' => 'required',
-            'expertise_primary_status' => 'required',
             'expertise_status' => 'required',
             'expertise_additional_status' => 'required',
             'expertise_speciality_ids' => 'required',

@@ -33,6 +33,10 @@ class TasksController extends Controller
                 if($value->leader_id) {
                     array_push($executors, $value->leader());
                 }
+
+                if($value->id == 1) {
+                    foreach ($value->department_users() as $department_user) array_push($executors, $department_user);
+                }
             }
         } else {
             $tasks = $tasks = $task->where('executor_id', $user->id);
@@ -45,6 +49,10 @@ class TasksController extends Controller
                 }
             } elseif($user->subdivision()) $executors = $user->subdivision()->subdivision_users();
         }
+
+        $executors = array_sort($executors, function($value) {
+            return $value->last_name;
+        });
 
         return view('pages.task.list', [
             'title' => 'Контроль | ' . config('app.name'),

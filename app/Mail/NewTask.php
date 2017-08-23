@@ -32,9 +32,9 @@ class NewTask extends Mailable
      */
     public function build()
     {
-        return $this->from('sharipkanov@gmail.com')
+        return $this->from(config('mail.from.address'))
             ->view('mail.newTask')->with([
                 'url' => route('page.task.show', ['task' => $this->task->id])
-            ]);
+            ])->subject('Новое карточка задания');
     }
 }

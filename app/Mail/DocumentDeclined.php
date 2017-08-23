@@ -31,9 +31,9 @@ class DocumentDeclined extends Mailable
      */
     public function build()
     {
-        return $this->from('sharipkanov@gmail.com')
+        return $this->from(config('mail.from.address'))
             ->view('mail.documentDeclined')->with([
                 'url' => route('page.document.show', ['document' => $this->document->id])
-            ]);
+            ])->subject('Ваш документ был отклонен в саглосовании');
     }
 }

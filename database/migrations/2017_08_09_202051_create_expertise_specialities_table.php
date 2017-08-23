@@ -13,13 +13,13 @@ class CreateExpertiseSpecialitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_specialities', function (Blueprint $table) {
+        /*Schema::create('expertise_specialities', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('code');
             $table->integer('expertise_type_id');
             $table->timestamps();
-        });
+        });*/
     }
 
     /**
@@ -29,6 +29,6 @@ class CreateExpertiseSpecialitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expertise_specialities');
+//        Schema::dropIfExists('expertise_specialities');
     }
 }

@@ -18,7 +18,6 @@ class CreateExpertisesTable extends Migration
             $table->integer('category_id');
             $table->string('case_number');
             $table->string('article_number');
-            $table->string('expertise_primary_status');
             $table->string('expertise_status');
             $table->string('expertise_additional_status');
             $table->string('expertise_speciality_ids');
@@ -29,7 +28,7 @@ class CreateExpertisesTable extends Migration
             $table->string('expertise_user_fullname');
             $table->string('expertise_user_position')->nullable()->default(null);
             $table->string('expertise_user_rank')->nullable()->default(null);
-            $table->text('info');
+            $table->text('info')->nullable()->default(null);
             $table->string('files')->nullable()->default(null);
             $table->integer('user_id');
             $table->tinyInteger('status')->default(0);

@@ -31,9 +31,9 @@ class NewIncomeCorrespondence extends Mailable
      */
     public function build()
     {
-        return $this->from('sharipkanov@gmail.com')
+        return $this->from(config('mail.from.address'))
             ->view('mail.newIncomeCorrespondence')->with([
                 'url' => route('page.correspondence.show', ['correspondence' => $this->correspondence->id])
-            ]);
+            ])->subject('Новая регистрационной карточки входящего документа');
     }
 }

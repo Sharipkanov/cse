@@ -18,12 +18,7 @@ class Expertise extends Model
 
     public function status()
     {
-        return $this->belongsTo(ExpertiseStatus::class, 'expertise_primary_status', 'id')->first();
-    }
-
-    public function primary_status()
-    {
-        return $this->belongsTo(ExpertiseStatus::class, 'expertise_primary_status', 'id')->first();
+        return $this->belongsTo(ExpertiseStatus::class, 'expertise_status', 'id')->first();
     }
 
     public function addition_status()
@@ -38,7 +33,7 @@ class Expertise extends Model
 
     public function agency()
     {
-        return $this->belongsTo(ExpertiseRegion::class, 'expertise_agency_id', 'id')->first();
+        return $this->belongsTo(ExpertiseAgency::class, 'expertise_agency_id', 'id')->first();
     }
 
     public function organ()

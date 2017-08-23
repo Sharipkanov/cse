@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Department;
 use App\Expertise;
 use App\ExpertiseAgency;
 use App\ExpertiseCategory;
 use App\ExpertiseOrgan;
 use App\ExpertiseRegion;
+use App\ExpertiseSpecialist;
 use App\ExpertiseSpeciality;
 use App\ExpertiseStatus;
+use App\ExpertiseTask;
 use App\File;
 use App\Http\Requests\CreateExpertise;
-use App\Mail\ApproveExpertise;
+use App\Mail\NewExpertiseTask;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FilesController as Files;
 use Illuminate\Support\Facades\Mail;
@@ -90,11 +94,12 @@ class ExpertisesController extends Controller
      */
     public function store(CreateExpertise $request)
     {
+        $authenticatedUser = auth()->user();
+
         $expertise = new Expertise();
         $expertise->category_id = $request->input('category_id');
         $expertise->case_number = $request->input('case_number');
         $expertise->article_number = $request->input('article_number');
-        $expertise->expertise_primary_status = $request->input('expertise_primary_status');
         $expertise->expertise_status = $request->input('expertise_status');
         $expertise->expertise_additional_status = $request->input('expertise_additional_status');
         $expertise->expertise_speciality_ids = $request->input('expertise_speciality_ids');
@@ -106,7 +111,7 @@ class ExpertisesController extends Controller
         $expertise->expertise_user_position = $request->input('expertise_user_position');
         $expertise->expertise_user_rank = $request->input('expertise_user_rank');
         $expertise->info = $request->input('info');
-        $expertise->user_id = auth()->user()->id;
+        $expertise->user_id = $authenticatedUser->id;
         $expertise->save();
 
         if($request->hasFile('files')) {
@@ -116,7 +121,7 @@ class ExpertisesController extends Controller
 
         $expertise->update();
 
-        Mail::to('sharipkanov@gmail.com')->send(new ApproveExpertise($expertise));
+        Mail::to($authenticatedUser->director()->email)->send(new NewExpertiseTask($expertise));
 
         return response()->redirectTo(route('page.expertise.show', ['expertise' => $expertise->id]));
     }
@@ -124,31 +129,116 @@ class ExpertisesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Expertise  $expertise
-     * @param  File $file
+     * @param Expertise  $expertise
+     * @param File $file
+     * @param Department $department
+     * @param ExpertiseSpecialist $expertiseSpecialist
      * @return \Illuminate\Http\Response
      */
-    public function show(Expertise $expertise, File $file)
+    public function show(Expertise $expertise, File $file, ExpertiseSpeciality $expertiseSpeciality, Department $department, ExpertiseSpecialist $expertiseSpecialist)
     {
         if(!$expertise) return abort(404);
 
+        $user = auth()->user();
+
         $expertise->fileList = $file->whereIn('id', explode(',', $expertise->files))->get();
+        $expertise->specialities = $expertiseSpeciality->whereIn('id', explode(',', $expertise->expertise_speciality_ids))->get();
+
+        $executors = [];
+
+        if($user->id == $user->director()->id) {
+            $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $expertise->expertise_speciality_ids))->get();
+            $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
+            if(count($specialists) && !$has_task) {
+                foreach ($specialists as $specialist) {
+                    $leader = $specialist->expert()->department()->leader();
+                    $speciality = $specialist->speciality();
+                    if(!isset($executors[$leader->id])) {
+                        $executors[$leader->id]['leader'] = $leader;
+                        $executors[$leader->id]['specialities'] = [];
+                    }
+
+                    if(!isset($executors[$leader->id]['specialities'][$speciality->id])) {
+                        $executors[$leader->id]['specialities'][$speciality->id] = $speciality;
+                    }
+                }
+            }
+        } else {
+            if($user->id == $user->department()->leader_id) {
+                $income_task = ExpertiseTask::where(['executor_id' => $user->id, 'expertise_id' => $expertise->id])->first();
+                $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
+
+                if($income_task && !$has_task) {
+                    $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $income_task->speciality_ids))->get();
+
+                    if(count($specialists)) {
+                        foreach ($specialists as $specialist) {
+                            $expert = $specialist->expert();
+
+                            if($expert->subdivision_id && $expert->subdivision()) {
+                                $leader = $expert->subdivision()->leader();
+                                $speciality = $specialist->speciality();
+                                if(!isset($executors[$leader->id])) {
+                                    $executors[$leader->id]['leader'] = $leader;
+                                    $executors[$leader->id]['specialities'] = [];
+                                }
+
+                                if(!isset($executors[$leader->id]['specialities'][$speciality->id])) {
+                                    $executors[$leader->id]['specialities'][$speciality->id] = $speciality;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } elseif($user->id == $user->subdivision()->leader_id) {
+                $income_task = ExpertiseTask::where(['executor_id' => $user->id, 'expertise_id' => $expertise->id])->first();
+                $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
+
+                if($income_task && !$has_task) {
+                    $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $income_task->speciality_ids))->get();
+
+                    if(count($specialists)) {
+                        foreach ($specialists as $specialist) {
+                            $expert = $specialist->expert();
+                            $speciality = $specialist->speciality();
+
+                            if($specialist->expert_id != $user->id) {
+                                if(!isset($executors[$specialist->expert_id])) {
+                                    $executors[$specialist->expert_id]['leader'] = $expert;
+                                    $executors[$specialist->expert_id]['specialities'] = [];
+                                }
+
+                                if(!isset($executors[$specialist->expert_id]['specialities'][$speciality->id])) {
+                                    $executors[$specialist->expert_id]['specialities'][$speciality->id] = $speciality;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
 
         return view('pages.expertise.show', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
-            'item' => $expertise
+            'item' => $expertise,
+            'executors' => $executors
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Expertise $expertise
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Expertise $expertise)
     {
-        //
+        dd($expertise);
+        return view('pages.expertise.show', [
+            'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
+            'expertise' => $expertise
+        ]);
     }
 
     /**
@@ -172,5 +262,31 @@ class ExpertisesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function store_task(User $user, Request $request)
+    {
+        $executes = $request->input('execute');
+        $expertiseId = $request->input('expertise_id');
+
+        $expertise = Expertise::where('id', $expertiseId)->first();
+
+        foreach ($executes as $execute) {
+            $expertiseTask = new ExpertiseTask();
+            $expertiseTask->user_id = auth()->user()->id;
+            $expertiseTask->executor_id = $execute['executor'];
+            $expertiseTask->speciality_ids = implode(',', $execute['specialities']);
+            $expertiseTask->expertise_id = $expertiseId;
+
+            $expertiseTask->save();
+
+            Mail::to($user->where('id', $execute['executor'])->first()->email)->send(new NewExpertiseTask($expertise));
+        }
+
+        $expertise->status = 1;
+        $expertise->save();
+
+        return response()->redirectTo(route('page.expertise.show', ['expertise' => $expertise->id]));
+
     }
 }

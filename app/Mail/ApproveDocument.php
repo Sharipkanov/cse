@@ -31,9 +31,9 @@ class ApproveDocument extends Mailable
      */
     public function build()
     {
-        return $this->from('sharipkanov@gmail.com')
+        return $this->from(config('mail.from.address'))
             ->view('mail.approveDocument')->with([
                 'url' => route('page.document.show', ['document' => $this->document->id])
-            ]);
+            ])->subject('Новый документ на подтверждение');
     }
 }

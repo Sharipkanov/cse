@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ApproveExpertise extends Mailable
+class NewExpertiseTask extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,9 +32,9 @@ class ApproveExpertise extends Mailable
      */
     public function build()
     {
-        return $this->from('sharipkanov@gmail.com')
-            ->view('mail.approveExpertise')->with([
+        return $this->from(config('mail.from.address'))
+            ->view('mail.newExpertiseTask')->with([
                 'url' => route('page.expertise.show', ['document' => $this->expertise->id])
-            ]);
+            ])->subject('Новая экспертиза на поручение');
     }
 }

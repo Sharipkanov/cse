@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExpertiseApprovesTable extends Migration
+class CreateExpertiseTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateExpertiseApprovesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_approves', function (Blueprint $table) {
+        Schema::create('expertise_tasks', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('expertise_id');
             $table->integer('user_id');
-            $table->tinyInteger('order');
-            $table->text('info')->nullable()->default(null);
+            $table->integer('executor_id');
+            $table->string('speciality_ids');
+            $table->integer('expertise_id');
+            $table->integer('parent_id')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ class CreateExpertiseApprovesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expertise_approves');
+        Schema::dropIfExists('expertise_tasks');
     }
 }
