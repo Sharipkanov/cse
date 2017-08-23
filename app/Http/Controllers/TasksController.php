@@ -171,7 +171,7 @@ class TasksController extends Controller
         $newTask->executor_id = $executorId;
         $newTask->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
         $newTask->info = $request->input('info');
-        $newTask->correspondence_id = ($request->has('correspondence_id')) ? $request->input('correspondence_id') : 0;
+        $newTask->correspondence_id = $task->correspondence_id;
         $newTask->user_id = $user->id;
         $newTask->parent_id = ($task->parent_id) ? $task->parent_id : $task->id;
 

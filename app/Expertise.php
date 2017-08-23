@@ -40,4 +40,14 @@ class Expertise extends Model
     {
         return $this->belongsTo(ExpertiseOrgan::class, 'expertise_organ_id', 'id')->first();
     }
+
+    public function infos()
+    {
+        return $this->hasMany(ExpertiseInfo::class, 'expertise_id', 'id');
+    }
+
+    public function info()
+    {
+        return $this->infos->where('user_id', auth()->user()->id)->first();
+    }
 }

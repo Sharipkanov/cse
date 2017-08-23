@@ -7,8 +7,11 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-space-between">
                 <div>
-                    @if(count($executors))
+                    @if(count($executors) && $income_task && $income_task->status == 0)
                         <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
+                    @endif
+                    @if($income_task && $income_task->status == 1 && $item->info())
+                        <a href="{{ route('page.expertise.edit', ['expertiseInfo' => $item->info()->id]) }}" class="uk-button">Редактировать</a>
                     @endif
                     @if($income_task && $income_task->status == 0 && !$outcome_task)
                         <form action="{{ route('page.expertise.task.set') }}" class="uk-display-inline" method="post">
@@ -23,7 +26,7 @@
                 </div>
             </div>
 
-            @if(count($executors))
+            @if(count($executors) && $income_task && $income_task->status == 0)
                 <form id="approve" action="{{ route('page.expertise.task.store') }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
                     @if($task_parent)
@@ -33,7 +36,7 @@
                     @foreach($executors as $executor)
                         <div class="uk-form-row">
                             <label class="uk-flex uk-flex-middle">
-                                <span class="uk-margin-small-right"><input type="checkbox" name="execute[{{ $executor['leader']->id }}][executor]" value="{{ $executor['leader']->id }}"></span>
+                                <span class="uk-margin-small-right"><input type="checkbox" name="execute[{{ $executor['leader']->id }}][executor]" value="{{ $executor['leader']->id }}" class="leader-checkobx"></span>
                                 <span>{{ $executor['leader']->last_name }} {{ $executor['leader']->first_name }} {{ $executor['leader']->middle_name }}</span>
                             </label>
                             @foreach($executor['specialities'] as $speciality)

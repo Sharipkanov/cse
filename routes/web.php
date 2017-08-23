@@ -42,11 +42,16 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('{expertise}/show.html', 'ExpertisesController@show')->name('page.expertise.show');
         Route::get('{expertiseInfo}/edit.html', 'ExpertisesController@edit')->name('page.expertise.edit');
         Route::post('{expertiseInfo}/update.html', 'ExpertisesController@update')->name('page.expertise.update');
+        Route::post('{expertiseInfo}/stop.html', 'ExpertisesController@stop')->name('page.expertise.stop');
+        Route::post('{expertiseInfo}/restart.html', 'ExpertisesController@restart')->name('page.expertise.restart');
+        Route::post('{expertiseInfo}/approve.html', 'ExpertisesController@approve')->name('page.expertise.approve');
         Route::post('store.html', 'ExpertisesController@store')->name('page.expertise.store');
         Route::post('specialities.html', 'ExpertisesController@specialities')->name('page.expertise.specialities');
         Route::post('agencies.html', 'ExpertisesController@agencies')->name('page.expertise.agencies');
         Route::post('task/store.html', 'ExpertisesController@store_task')->name('page.expertise.task.store');
         Route::post('task/set.html', 'ExpertisesController@set_task')->name('page.expertise.task.set');
+        Route::post('/sc.html', 'ExpertisesController@sc');
+        Route::post('/ds.html', 'ExpertisesController@ds');
     });
 
     Route::get('file/{file}/download.html', 'FilesController@download')->name('page.file.download');

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Correspondence;
 use App\Department;
+use App\Document;
 use App\Expertise;
 use App\ExpertiseAgency;
+use App\ExpertiseApprove;
 use App\ExpertiseCategory;
 use App\ExpertiseInfo;
 use App\ExpertiseOrgan;
@@ -15,11 +18,14 @@ use App\ExpertiseStatus;
 use App\ExpertiseTask;
 use App\File;
 use App\Http\Requests\CreateExpertise;
+use App\Mail\ApproveExpertise;
 use App\Mail\NewExpertiseTask;
+use App\Task;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FilesController as Files;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\UsersController as Users;
 
 class ExpertisesController extends Controller
 {
@@ -149,6 +155,7 @@ class ExpertisesController extends Controller
         $task_parent = 0;
         $income_task = null;
         $outcome_task = null;
+        $expertiseInfos = $expertise->infos;
 
         if($user->id == $user->director()->id) {
             $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $expertise->expertise_speciality_ids))->get();
@@ -232,7 +239,8 @@ class ExpertisesController extends Controller
             'executors' => $executors,
             'task_parent' => $task_parent,
             'income_task' => $income_task,
-            'outcome_task' => $outcome_task
+            'outcome_task' => $outcome_task,
+            'expertiseInfos' => $expertiseInfos
         ]);
     }
 
@@ -242,19 +250,25 @@ class ExpertisesController extends Controller
      * @param File $file
      * @param ExpertiseSpeciality $expertiseSpeciality,
      * @param ExpertiseInfo $expertiseInfo
+     * @param ExpertiseApprove $expertiseApprove
      * @return \Illuminate\Http\Response
      */
-    public function edit(File $file, ExpertiseSpeciality $expertiseSpeciality, ExpertiseInfo $expertiseInfo)
+    public function edit(File $file, ExpertiseSpeciality $expertiseSpeciality, ExpertiseInfo $expertiseInfo, ExpertiseApprove $expertiseApprove)
     {
         $expertise = $expertiseInfo->expertise();
 
         $expertise->fileList = $file->whereIn('id', explode(',', $expertise->files))->get();
         $expertise->specialities = $expertiseSpeciality->whereIn('id', explode(',', $expertise->expertise_speciality_ids))->get();
 
+        $approves = $expertiseApprove->where([
+            'expertise_info_id' => $expertiseInfo->id
+        ])->orderBy('order')->get();
+
         return view('pages.expertise.edit', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
             'item' => $expertise,
-            'expertiseInfo' => $expertiseInfo
+            'expertiseInfo' => $expertiseInfo,
+            'approves' => $approves
         ]);
     }
 
@@ -328,5 +342,79 @@ class ExpertisesController extends Controller
         $expertiseInfo->save();
 
         return response()->redirectTo(route('page.expertise.edit', ['expertiseInfo' => $expertiseInfo->id]));
+    }
+
+    public function restart(ExpertiseInfo $expertiseInfo)
+    {
+        $expertiseInfo->renewal_date = date('Y-m-d');
+
+        $expertiseInfo->is_stopped = 0;
+
+        $expertiseInfo->save();
+
+        return redirect()->back();
+
+    }
+
+    public function stop(Request $request, ExpertiseInfo $expertiseInfo)
+    {
+        $expertiseInfo->correspondence_id = ($request->has('correspondence_id')) ? $request->input('correspondence_id') : 0;
+        $expertiseInfo->document_id = ($request->has('document_id')) ? $request->input('document_id') : 0;
+        $expertiseInfo->reason_for_suspension = $request->input('reason_for_suspension');
+        $expertiseInfo->suspension_date = date('Y-m-d');
+        $expertiseInfo->is_stopped = 1;
+
+        $expertiseInfo->save();
+
+        return redirect()->back();
+    }
+
+    public function sc(Request $request, Correspondence $correspondence)
+    {
+        if($request->has('get_sc')) {
+            $user = auth()->user();
+            $correspondenceIds = $user->tasks()->pluck('correspondence_id');
+
+            $result = $correspondence->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('sc') .'%')
+                ->whereIn('id', $correspondenceIds)->get();
+            if(count($result)) return response()->json($result, 200);
+
+            return response()->json(['message' => 'Нет совпадений'], 422);
+        }
+    }
+
+    public function ds(Request $request, Document $document)
+    {
+        if($request->has('get_ds')) {
+            $user = auth()->user();
+
+            $result = $document->select('id', 'register_number as name')->where('register_number', 'like', '%'. $request->input('ds') .'%')
+                ->where('user_id', $user->id)->get();
+            if(count($result)) return response()->json($result, 200);
+
+            return response()->json(['message' => 'Нет совпадений'], 422);
+        }
+    }
+
+    public function approve(ExpertiseInfo $expertiseInfo)
+    {
+        $leaders = Users::leaders();
+        $expertise = $expertiseInfo->expertise();
+        $userId = 0;
+
+        foreach (array_reverse($leaders) as $key => $leader) {
+            $approve = new ExpertiseApprove();
+
+            if($key == 0) $userId = $leader->id;
+
+            $approve->user_id = $leader->id;
+            $approve->expertise_info_id = $expertiseInfo->id;
+            $approve->order = $key + 1;
+            $approve->save();
+        }
+
+        Mail::to(auth()->user()->where('id', $userId)->first()->email)->send(new ApproveExpertise($expertise));
+
+        return redirect()->back();
     }
 }

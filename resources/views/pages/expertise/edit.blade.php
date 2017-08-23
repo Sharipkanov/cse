@@ -16,11 +16,18 @@
                         <button type="submit" class="uk-button uk-button-primary">Соглосовать</button>
                     </form>--}}
 
-                    @if(!$expertiseOutOfSuspension)
-                        <button class="uk-button uk-button-danger" data-uk-toggle="{target:'#suspension', animation:'uk-animation-slide-right, uk-animation-slide-right'}">Приостановить</button>
+                    @if(!$expertiseInfo->is_stopped)
+                        <form action="{{ route('page.expertise.approve', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-display-inline" method="post">
+                            {{ csrf_field() }}
+                            <button class="uk-button uk-button-primary">Соглосовать</button>
+                        </form>
+                        @if(!$expertiseOutOfSuspension)
+                            <button class="uk-button uk-button-danger" data-uk-toggle="{target:'#suspension', animation:'uk-animation-slide-right, uk-animation-slide-right'}">Приостановить</button>
+                        @endif
                     @endif
                     @if($expertiseInfo->is_stopped)
-                        <form action="" class="uk-display-inline">
+                        <form action="{{ route('page.expertise.restart', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-display-inline" method="post">
+                            {{ csrf_field() }}
                             <button type="submit" class="uk-button uk-button-success">Возобновть</button>
                         </form>
                     @endif
@@ -30,8 +37,8 @@
                 </div>
             </div>
 
-            @if(!$expertiseOutOfSuspension)
-                <div id="suspension" class="uk-form uk-hidden uk-margin-top">
+            @if(!$expertiseOutOfSuspension && !$expertiseInfo->is_stopped)
+                <div id="suspension" class="uk-form uk-margin-top uk-hidden">
                     <div class="uk-form-row">
                         <label class="uk-form-label">Причина приостановления:</label>
                         <div class="uk-form-controls uk-margin-small-top">
@@ -44,7 +51,74 @@
                                 <option value="Участие в комплексной экспертизе">Участие в комплексной экспертизе</option>
                             </select>
                         </div>
+
+                        <form id="form-sc" action="{{ route('page.expertise.stop', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-margin-top uk-hidden" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="reason_for_suspension" class="reason_for_suspension">
+                            <div class="uk-position-relative">
+                                <label class="uk-form-label">Выберите основание:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="text" name="" id="sc-search-input" placeholder="Введите номер входящего документа корреспондений" class="uk-width-1-1">
+                                    <input type="hidden" name="correspondence_id"  value="" id="sc-input">
+                                </div>
+                                <div class="drop-down" id="sc-drop-down">
+
+                                </div>
+                            </div>
+                            <div class="uk-margin-top uk-text-right">
+                                <button class="uk-button uk-button-success">Приостоновить</button>
+                            </div>
+                        </form>
+
+                        <form id="form-ds" action="{{ route('page.expertise.stop', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-margin-top uk-hidden" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="reason_for_suspension" class="reason_for_suspension">
+                            <div class="uk-position-relative">
+                                <label class="uk-form-label">Выберите основание:</label>
+                                <div class="uk-form-controls uk-margin-small-top">
+                                    <input type="text" name="" id="ds-search-input" placeholder="Введите номер документа" class="uk-width-1-1">
+                                    <input type="hidden" name="document_id"  value="" id="ds-input">
+                                </div>
+                                <div class="drop-down" id="ds-drop-down">
+
+                                </div>
+                            </div>
+                            <div class="uk-margin-top uk-text-right">
+                                <button class="uk-button uk-button-success">Приостоновить</button>
+                            </div>
+                        </form>
+
+                        <div>
+                            
+                        </div>
                     </div>
+                </div>
+            @endif
+
+            @if(count($approves))
+                <div class="uk-margin-top uk-form">
+                    @foreach($approves as $approve)
+                        <div class="{{ (!$loop->first) ? 'uk-margin-top' : '' }}">
+                            <div class="uk-grid">
+                                <div class="uk-width-2-6">
+                                    <p class="uk-text-bold">{{ $approve->approver()->last_name .' '. str_limit($approve->approver()->first_name, 1, '.') . str_limit($approve->approver()->middle_name, 1, '') }}</p>
+                                </div>
+                                <div class="uk-width-4-6">
+                                    @if($approve->status == 0)
+                                        <p>Ожидает</p>
+                                    @elseif($approve->status == 1)
+                                        <p>Соглосован</p>
+                                    @elseif($approve->status == 2)
+                                        <p>Соглосован с примичанием</p>
+                                        <textarea class="uk-width-1-1" rows="7" disabled>{{ $approve->info }}</textarea>
+                                    @elseif($approve->status == 3)
+                                        <p>Отклонен</p>
+                                        <textarea class="uk-width-1-1" rows="7" disabled>{{ $approve->info }}</textarea>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             @endif
 
@@ -445,10 +519,12 @@
                         </div>
                     </div>
                 </div>
+                @if($expertiseInfo->status == 0 && !$expertiseInfo->is_stopped)
                 <hr>
                 <div class="uk-text-right">
                     <button type="submit" class="uk-button uk-button-success">Сохранить</button>
                 </div>
+                @endif
             </form>
             <div class="uk-form uk-margin-large-bottom">
                 <div>
@@ -468,6 +544,21 @@
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->reason_for_suspension) ? $expertiseInfo->reason_for_suspension : 'Еще не был приостановлен' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-margin-top">
+                    <div class="uk-grid">
+                        <div class="uk-width-2-6">
+                            <p class="uk-text-bold">Основание</p>
+                        </div>
+                        <div class="uk-width-4-6">
+                            @if($expertiseInfo->document_id)
+                                <a target="_blank" href="{{ route('page.document.show', ['document' => $expertiseInfo->document_id]) }}">Просмотреть</a>
+                            @endif
+                            @if($expertiseInfo->correspondence_id)
+                                <a target="_blank" href="{{ route('page.correspondence.show', ['correspondence' => $expertiseInfo->correspondence_id]) }}">Просмотреть</a>
+                            @endif
                         </div>
                     </div>
                 </div>

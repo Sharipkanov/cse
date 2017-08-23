@@ -246,6 +246,82 @@ $(document).ready(function() {
         });
     });
 
+    var $dsSearchInput = $('#ds-search-input'),
+        $dsInput = $('#ds-input'),
+        $dsDropDown = $('#ds-drop-down');
+
+    $dsSearchInput.keyup(function() {
+        var $input = $(this),
+            inputValue = $input.val();
+
+        $.ajax({
+            type: "POST",
+            url: '/expertise/ds.html',
+            data: {ds: inputValue, get_ds: 1},
+            success: function(response) {
+                $dsDropDown.removeClass('danger');
+                $dsDropDown.empty();
+
+                for(var i=0; i<response.length; i++) {
+                    var ds = response[i],
+                        dsCode = ds['code'];
+
+                    $('<a href="#" class="ds-choose" data-id="'+ ds['id'] +'">'+ ds['name'] +'</a>').appendTo($dsDropDown);
+                }
+
+                if(!$dsDropDown.hasClass('active')) $dsDropDown.addClass('active');
+            },
+            error: function(response) {
+                if(response.status === 422) {
+                    $dsDropDown.addClass('danger');
+                    $dsDropDown.empty();
+                    $('<p>'+ response['responseJSON']['message'] +'</p>').appendTo($dsDropDown);
+
+                    if(!$dsDropDown.hasClass('active')) $dsDropDown.addClass('active');
+                }
+            },
+            dataType: 'json'
+        });
+    });
+
+    var $scSearchInput = $('#sc-search-input'),
+        $scInput = $('#sc-input'),
+        $scDropDown = $('#sc-drop-down');
+
+    $scSearchInput.keyup(function() {
+        var $input = $(this),
+            inputValue = $input.val();
+
+        $.ajax({
+            type: "POST",
+            url: '/expertise/sc.html',
+            data: {sc: inputValue, get_sc: 1},
+            success: function(response) {
+                $scDropDown.removeClass('danger');
+                $scDropDown.empty();
+
+                for(var i=0; i<response.length; i++) {
+                    var sc = response[i],
+                        scCode = sc['code'];
+
+                    $('<a href="#" class="sc-choose" data-id="'+ sc['id'] +'">'+ sc['name'] +'</a>').appendTo($scDropDown);
+                }
+
+                if(!$scDropDown.hasClass('active')) $scDropDown.addClass('active');
+            },
+            error: function(response) {
+                if(response.status === 422) {
+                    $scDropDown.addClass('danger');
+                    $scDropDown.empty();
+                    $('<p>'+ response['responseJSON']['message'] +'</p>').appendTo($scDropDown);
+
+                    if(!$scDropDown.hasClass('active')) $scDropDown.addClass('active');
+                }
+            },
+            dataType: 'json'
+        });
+    });
+
     var $taskSearchInput = $('#task-search-input'),
         $taskInput = $('#task-input'),
         $taskDropDown = $('#task-drop-down');
@@ -305,6 +381,29 @@ $(document).ready(function() {
         $correspondentDropDown.removeClass('active');
     });
 
+    $(document).on('click', '.sc-choose', function(e) {
+        e.preventDefault();
+
+        var $link = $(this);
+
+        $scInput.val($link.data('id'));
+        $scSearchInput.val($link.html());
+
+        $scDropDown.removeClass('active');
+    });
+
+    $(document).on('click', '.ds-choose', function(e) {
+        e.preventDefault();
+
+        var $link = $(this);
+
+        $dsInput.val($link.data('id'));
+        $dsSearchInput.val($link.html());
+
+        $dsDropDown.removeClass('active');
+    });
+
+
     $(document).on('click', function(e) {
         var $target = $(e.target);
 
@@ -340,14 +439,18 @@ $(document).ready(function() {
 
     $(document).on('change', '#reason_for_suspension', function() {
         var $select = $(this),
-            suspensionReason = $select.val();
+            suspensionReason = $select.val(),
+            $formDs = $('#form-ds'),
+            $formSc = $('#form-sc');
 
-        if(['Ходатайство', 'Командировка'].indexOf(suspensionReason) > -1) {
-            console.log(1);
-        } else if(['Больничный лист'].indexOf(suspensionReason) > -1) {
-            console.log(2);
+        $('.reason_for_suspension').val(suspensionReason);
+
+        if(['Ходатайство', 'Командировка', 'Больничный лист'].indexOf(suspensionReason) > -1) {
+            $formDs.removeClass('uk-hidden');
+            $formSc.addClass('uk-hidden');
         } else if(['Вызов в суд', 'Участие в комплексной экспертизе'].indexOf(suspensionReason) > -1) {
-            console.log(3);
+            $formDs.addClass('uk-hidden');
+            $formSc.removeClass('uk-hidden');
         }
     });
 });
