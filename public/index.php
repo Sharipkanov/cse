@@ -5,7 +5,18 @@
  *
  * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
- */
+ *
+ *
+ * MAIL_DRIVER=smtp
+MAIL_HOST=smtp.yandex.kz
+MAIL_PORT=465
+MAIL_USERNAME=postmaster@cse-astana.kz
+MAIL_PASSWORD=astana2017
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=postmaster@cse-astana.kz
+MAIL_FROM_NAME="РГКП 'Центр судебных экспертиз'" */
+
+
 
 /*
 |--------------------------------------------------------------------------
