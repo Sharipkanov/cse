@@ -34,7 +34,7 @@ class NewExpertiseTask extends Mailable
     {
         return $this->from(config('mail.from.address'))
             ->view('mail.newExpertiseTask')->with([
-                'url' => route('page.expertise.show', ['document' => $this->expertise->id])
+                'url' => route('page.expertise.show', ['expertise' => $this->expertise->id])
             ])->subject('Новая экспертиза на поручение');
     }
 }

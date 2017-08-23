@@ -6,6 +6,7 @@ use App\Department;
 use App\Expertise;
 use App\ExpertiseAgency;
 use App\ExpertiseCategory;
+use App\ExpertiseInfo;
 use App\ExpertiseOrgan;
 use App\ExpertiseRegion;
 use App\ExpertiseSpecialist;
@@ -145,11 +146,14 @@ class ExpertisesController extends Controller
         $expertise->specialities = $expertiseSpeciality->whereIn('id', explode(',', $expertise->expertise_speciality_ids))->get();
 
         $executors = [];
+        $task_parent = 0;
+        $income_task = null;
+        $outcome_task = null;
 
         if($user->id == $user->director()->id) {
             $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $expertise->expertise_speciality_ids))->get();
-            $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
-            if(count($specialists) && !$has_task) {
+            $outcome_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->first();
+            if(count($specialists) && !$outcome_task) {
                 foreach ($specialists as $specialist) {
                     $leader = $specialist->expert()->department()->leader();
                     $speciality = $specialist->speciality();
@@ -164,12 +168,15 @@ class ExpertisesController extends Controller
                 }
             }
         } else {
-            if($user->id == $user->department()->leader_id) {
-                $income_task = ExpertiseTask::where(['executor_id' => $user->id, 'expertise_id' => $expertise->id])->first();
-                $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
 
-                if($income_task && !$has_task) {
+            $income_task = ExpertiseTask::where(['executor_id' => $user->id, 'expertise_id' => $expertise->id])->first();
+
+            if($user->id == $user->department()->leader_id) {
+                $outcome_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->first();
+
+                if($income_task && !$outcome_task) {
                     $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $income_task->speciality_ids))->get();
+                    $task_parent = $income_task->id;
 
                     if(count($specialists)) {
                         foreach ($specialists as $specialist) {
@@ -191,11 +198,11 @@ class ExpertisesController extends Controller
                     }
                 }
 
-            } elseif($user->id == $user->subdivision()->leader_id) {
-                $income_task = ExpertiseTask::where(['executor_id' => $user->id, 'expertise_id' => $expertise->id])->first();
-                $has_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->exists();
+            } else if($user->subdivision() && $user->id == $user->subdivision()->leader_id) {
+                $outcome_task = ExpertiseTask::where(['user_id' => $user->id, 'expertise_id' => $expertise->id])->first();
 
-                if($income_task && !$has_task) {
+                if($income_task && !$outcome_task) {
+                    $task_parent = $income_task->parent_id;
                     $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $income_task->speciality_ids))->get();
 
                     if(count($specialists)) {
@@ -222,35 +229,53 @@ class ExpertisesController extends Controller
         return view('pages.expertise.show', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
             'item' => $expertise,
-            'executors' => $executors
+            'executors' => $executors,
+            'task_parent' => $task_parent,
+            'income_task' => $income_task,
+            'outcome_task' => $outcome_task
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Expertise $expertise
+     * @param File $file
+     * @param ExpertiseSpeciality $expertiseSpeciality,
+     * @param ExpertiseInfo $expertiseInfo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Expertise $expertise)
+    public function edit(File $file, ExpertiseSpeciality $expertiseSpeciality, ExpertiseInfo $expertiseInfo)
     {
-        dd($expertise);
-        return view('pages.expertise.show', [
+        $expertise = $expertiseInfo->expertise();
+
+        $expertise->fileList = $file->whereIn('id', explode(',', $expertise->files))->get();
+        $expertise->specialities = $expertiseSpeciality->whereIn('id', explode(',', $expertise->expertise_speciality_ids))->get();
+
+        return view('pages.expertise.edit', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
-            'expertise' => $expertise
+            'item' => $expertise,
+            'expertiseInfo' => $expertiseInfo
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Request $request
+     * @param  ExpertiseInfo $expertiseInfo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ExpertiseInfo $expertiseInfo)
     {
-        //
+        foreach ($request->all() as $key => $value) {
+            if($key!= '_token' && $value) {
+                $expertiseInfo[$key] = $value;
+            }
+        }
+
+        $expertiseInfo->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -277,6 +302,7 @@ class ExpertisesController extends Controller
             $expertiseTask->executor_id = $execute['executor'];
             $expertiseTask->speciality_ids = implode(',', $execute['specialities']);
             $expertiseTask->expertise_id = $expertiseId;
+            $expertiseTask->parent_id = ($request->has('parent_id')) ? $request->input('parent_id') : 0;
 
             $expertiseTask->save();
 
@@ -288,5 +314,19 @@ class ExpertisesController extends Controller
 
         return response()->redirectTo(route('page.expertise.show', ['expertise' => $expertise->id]));
 
+    }
+
+    public function set_task(Request $request)
+    {
+        $expertiseTask = ExpertiseTask::where('id', $request->input('expertise_task_id'))->first();
+        $expertiseTask->status = 1;
+        $expertiseTask->save();
+
+        $expertiseInfo = new ExpertiseInfo();
+        $expertiseInfo->expertise_id = $expertiseTask->expertise_id;
+        $expertiseInfo->user_id = auth()->user()->id;
+        $expertiseInfo->save();
+
+        return response()->redirectTo(route('page.expertise.edit', ['expertiseInfo' => $expertiseInfo->id]));
     }
 }

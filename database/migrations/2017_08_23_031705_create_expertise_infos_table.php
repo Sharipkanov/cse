@@ -45,6 +45,7 @@ class CreateExpertiseInfosTable extends Migration
             $table->integer('user_id');
             $table->integer('parent_id')->default(0);
             $table->boolean('status')->default(0);
+            $table->boolean('is_stopped')->default(0);
             $table->timestamps();
         });
     }

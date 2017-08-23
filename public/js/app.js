@@ -332,4 +332,22 @@ $(document).ready(function() {
             $currentCheckboxConnected.not($currentCheckbox).closest('label').show();
         }
     });
+
+    $(document).on('keypress', '[data-number]', function (e) {
+
+        return e.charCode >= 48 && e.charCode <= 57
+    });
+
+    $(document).on('change', '#reason_for_suspension', function() {
+        var $select = $(this),
+            suspensionReason = $select.val();
+
+        if(['Ходатайство', 'Командировка'].indexOf(suspensionReason) > -1) {
+            console.log(1);
+        } else if(['Больничный лист'].indexOf(suspensionReason) > -1) {
+            console.log(2);
+        } else if(['Вызов в суд', 'Участие в комплексной экспертизе'].indexOf(suspensionReason) > -1) {
+            console.log(3);
+        }
+    });
 });

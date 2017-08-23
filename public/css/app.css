@@ -267,3 +267,14 @@ footer {
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
 }
+
+.uk-accordion-title {
+    background: #fff;
+    box-sizing: border-box;
+    padding: 20px;
+    margin: 0;
+}
+
+.uk-accordion-title.uk-active {
+    background-color: #eee;
+}

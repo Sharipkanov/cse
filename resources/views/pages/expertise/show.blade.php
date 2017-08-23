@@ -10,6 +10,13 @@
                     @if(count($executors))
                         <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
                     @endif
+                    @if($income_task && $income_task->status == 0 && !$outcome_task)
+                        <form action="{{ route('page.expertise.task.set') }}" class="uk-display-inline" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="expertise_task_id" value="{{ $income_task->id }}">
+                            <button type="submit" class="uk-button uk-button-success">Принять</button>
+                        </form>
+                    @endif
                 </div>
                 <div>
                     <a href="{{ route('page.expertise.list') }}" class="uk-button uk-button-primary">К списку экспертиз</a>
@@ -19,6 +26,9 @@
             @if(count($executors))
                 <form id="approve" action="{{ route('page.expertise.task.store') }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
+                    @if($task_parent)
+                        <input type="hidden" name="parent_id" value="{{ $task_parent }}">
+                    @endif
                     <input type="hidden" name="expertise_id" value="{{ $item->id }}">
                     @foreach($executors as $executor)
                         <div class="uk-form-row">

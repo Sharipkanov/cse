@@ -68,7 +68,7 @@
                             <div class="uk-margin-top">
                                 <label class="uk-form-label">Дата исходящего:</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" class="uk-width-1-1{{ $errors->has('outcome_date') ? ' uk-form-danger' : '' }}" name="outcome_date" placeholder="Выберите дату исходящего" name="date" data-uk-datepicker="{maxDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
+                                    <input type="text" class="uk-width-1-1{{ $errors->has('outcome_date') ? ' uk-form-danger' : '' }}" name="outcome_date" placeholder="Выберите дату исходящего" data-uk-datepicker="{maxDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                                 </div>
                             </div>
                             @if ($errors->has('outcome_date'))

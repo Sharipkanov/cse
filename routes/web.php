@@ -40,11 +40,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('list.html', 'ExpertisesController@index')->name('page.expertise.list');
         Route::get('create.html', 'ExpertisesController@create')->name('page.expertise.create');
         Route::get('{expertise}/show.html', 'ExpertisesController@show')->name('page.expertise.show');
-        Route::get('{expertise}/edit.html', 'ExpertisesController@edit')->name('page.expertise.edit');
+        Route::get('{expertiseInfo}/edit.html', 'ExpertisesController@edit')->name('page.expertise.edit');
+        Route::post('{expertiseInfo}/update.html', 'ExpertisesController@update')->name('page.expertise.update');
         Route::post('store.html', 'ExpertisesController@store')->name('page.expertise.store');
         Route::post('specialities.html', 'ExpertisesController@specialities')->name('page.expertise.specialities');
         Route::post('agencies.html', 'ExpertisesController@agencies')->name('page.expertise.agencies');
         Route::post('task/store.html', 'ExpertisesController@store_task')->name('page.expertise.task.store');
+        Route::post('task/set.html', 'ExpertisesController@set_task')->name('page.expertise.task.set');
     });
 
     Route::get('file/{file}/download.html', 'FilesController@download')->name('page.file.download');
