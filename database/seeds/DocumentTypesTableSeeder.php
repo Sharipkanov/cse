@@ -14,6 +14,7 @@ class DocumentTypesTableSeeder extends Seeder
     {
         $seeders = [
             ['name' => 'Письмо'],
+            ['name' => 'Ходатайство'],
             ['name' => 'Ответ на ходатайство'],
             ['name' => 'Телефонограмма']
         ];

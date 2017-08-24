@@ -19,6 +19,8 @@ use App\ExpertiseTask;
 use App\File;
 use App\Http\Requests\CreateExpertise;
 use App\Mail\ApproveExpertise;
+use App\Mail\ExpertiseApproved;
+use App\Mail\ExpertiseDeclined;
 use App\Mail\NewExpertiseTask;
 use App\Task;
 use App\User;
@@ -155,7 +157,7 @@ class ExpertisesController extends Controller
         $task_parent = 0;
         $income_task = null;
         $outcome_task = null;
-        $expertiseInfos = $expertise->infos;
+        $expertiseInfos = $expertise->infos()->select('id', 'expertise_id', 'expertise_speciality_id')->get()->keyBy('expertise_speciality_id');
 
         if($user->id == $user->director()->id) {
             $specialists = $expertiseSpecialist->whereIn('expertise_speciality_id', explode(',', $expertise->expertise_speciality_ids))->get();
@@ -233,6 +235,14 @@ class ExpertisesController extends Controller
             };
         }
 
+        $tasks = ExpertiseTask::where('expertise_id', $expertise->id)->get();
+
+        if(count($tasks)) {
+            foreach ($tasks as $task) {
+                $task->specialities = ExpertiseSpeciality::select('id', 'name', 'code')->whereIn('id', explode(',', $task->speciality_ids))->get();
+            }
+        }
+
         return view('pages.expertise.show', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
             'item' => $expertise,
@@ -240,7 +250,8 @@ class ExpertisesController extends Controller
             'task_parent' => $task_parent,
             'income_task' => $income_task,
             'outcome_task' => $outcome_task,
-            'expertiseInfos' => $expertiseInfos
+            'expertiseInfos' => $expertiseInfos,
+            'tasks' => $tasks
         ]);
     }
 
@@ -262,13 +273,51 @@ class ExpertisesController extends Controller
 
         $approves = $expertiseApprove->where([
             'expertise_info_id' => $expertiseInfo->id
-        ])->orderBy('order')->get();
+        ])->get();
 
         return view('pages.expertise.edit', [
             'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
             'item' => $expertise,
             'expertiseInfo' => $expertiseInfo,
             'approves' => $approves
+        ]);
+    }
+
+    public function info_show(File $file, ExpertiseSpeciality $expertiseSpeciality, ExpertiseInfo $expertiseInfo, ExpertiseApprove $expertiseApprove)
+    {
+        $expertise = $expertiseInfo->expertise();
+
+        $expertise->fileList = $file->whereIn('id', explode(',', $expertise->files))->get();
+        $expertise->specialities = $expertiseSpeciality->whereIn('id', explode(',', $expertise->expertise_speciality_ids))->get();
+        $approve = null;
+        $previousApproved = 0;
+        $approves = $expertiseApprove->where([
+            'expertise_info_id' => $expertiseInfo->id
+        ])->get();
+
+
+        if(count($approves)) {
+            $approve = $approves->filter(function($ca) {
+                return $ca->user_id == auth()->user()->id && $ca->status == 0;
+            });
+
+            if(count($approve)) {
+                $approve = $approve->first();
+                if($approve->order > 1) {
+                    $previousApproved = $approves->filter(function($ca) use ($approve) {
+                        return $ca->order == ($approve->order - 1);
+                    })->pluck('status')->first();
+                } else $previousApproved = 1;
+            }
+        }
+
+        return view('pages.expertise.info-show', [
+            'title' => 'Регистрационный номер: № '. $expertise->id . ' | ' . config('app.name'),
+            'item' => $expertise,
+            'expertiseInfo' => $expertiseInfo,
+            'approves' => $approves,
+            'approve' => $approve,
+            'previousApproved' => $previousApproved
         ]);
     }
 
@@ -336,12 +385,16 @@ class ExpertisesController extends Controller
         $expertiseTask->status = 1;
         $expertiseTask->save();
 
-        $expertiseInfo = new ExpertiseInfo();
-        $expertiseInfo->expertise_id = $expertiseTask->expertise_id;
-        $expertiseInfo->user_id = auth()->user()->id;
-        $expertiseInfo->save();
+        foreach (explode(',', $expertiseTask->speciality_ids) as $specialityId)
+        {
+            $expertiseInfo = new ExpertiseInfo();
+            $expertiseInfo->expertise_id = $expertiseTask->expertise_id;
+            $expertiseInfo->expertise_speciality_id = $specialityId;
+            $expertiseInfo->user_id = auth()->user()->id;
+            $expertiseInfo->save();
+        }
 
-        return response()->redirectTo(route('page.expertise.edit', ['expertiseInfo' => $expertiseInfo->id]));
+        return response()->redirectTo(route('page.expertise.show', ['expertise' => $expertiseTask->expertise_id]));
     }
 
     public function restart(ExpertiseInfo $expertiseInfo)
@@ -413,8 +466,95 @@ class ExpertisesController extends Controller
             $approve->save();
         }
 
-        Mail::to(auth()->user()->where('id', $userId)->first()->email)->send(new ApproveExpertise($expertise));
+        $expertiseTask = ExpertiseTask::where([
+            'executor_id' => auth()->user()->id,
+            'expertise_id' => $expertise->id
+        ])->first();
+
+        $expertiseTask->status = 2;
+        $expertiseTask->save();
+
+        $expertiseInfo->is_stopped = 1;
+        $expertiseInfo->save();
+
+        Mail::to(auth()->user()->where('id', $userId)->first()->email)->send(new ApproveExpertise($expertiseInfo));
 
         return redirect()->back();
+    }
+
+    public function approve_answer(Request $request, ExpertiseInfo $expertiseInfo, ExpertiseApprove $expertiseApprove)
+    {
+        if(!$expertiseInfo || !$expertiseApprove) return abort(404);
+
+        $expertise = $expertiseInfo->expertise();
+
+        $expertiseApprove->status = $request->input('status');
+        $expertiseApprove->info = $request->input('info');
+        $expertiseApprove->save();
+
+        if($expertiseApprove->status !== 3) {
+            $nextExspertiseApprove = $expertiseApprove->where([
+                'expertise_info_id' => $expertiseApprove->expertise_info_id,
+                'status' => 0,
+                'order' =>  $expertiseApprove->order + 1
+            ])->first();
+
+            if($nextExspertiseApprove) {
+                Mail::to($nextExspertiseApprove->approver()->email)->send(new ApproveExpertise($expertiseInfo));
+            } else {
+                $expertiseInfo->status = 3;
+                $expertiseInfo->finish_date = date('Y-m-d');
+                $expertiseInfo->actual_days = $this->howManyDays(explode(' ', $expertiseInfo->created_at)[0], $expertiseInfo->finish_date);
+
+                $suspensionRenewal = 0;
+                if($expertiseInfo->suspension_date) {
+                    $suspensionRenewal = $this->howManyDays($expertiseInfo->suspension_date, $expertiseInfo->renewal_date);
+                }
+
+                $expertiseInfo->is_stopped = 0;
+
+                $expertiseInfo->production_days = $expertiseInfo->actual_days - $suspensionRenewal;
+
+                $expertiseInfo->save();
+
+                ExpertiseTask::where([
+                    'expertise_id' => $expertise->id,
+                    'executor_id' => $expertiseInfo->executor()->id
+                ])->update(['status' => 3]);
+
+                $infosCount = $expertise->infos()->count();
+                $apprevedExpertiseInfosCount = $expertise->infos()->where('status', 3)->count();
+
+                if($infosCount == $apprevedExpertiseInfosCount) {
+                    $expertise->status = 2;
+                    $expertise->save();
+
+                    ExpertiseTask::where('expertise_id', $expertise->id)->update(['status' => 3]);
+                }
+
+                Mail::to($expertiseInfo->executor()->email)->send(new ExpertiseApproved($expertiseInfo));
+            }
+
+        } else {
+            $expertiseInfo->status = 4;
+            $expertiseInfo->update();
+            ExpertiseTask::where([
+                'expertise_id' => $expertise->id,
+                'executor_id' => $expertiseInfo->executor()->id
+            ])->update(['status' => 4]);
+
+            Mail::to($expertiseInfo->executor()->email)->send(new ExpertiseDeclined($expertiseInfo));
+        }
+
+        return redirect()->back();
+    }
+
+    private function howManyDays($startDate, $endDate) {
+
+        $date1  = strtotime($startDate." 0:00:00");
+        $date2  = strtotime($endDate." 23:59:59");
+        $res    =  (($date2-$date1)/86400);
+
+        return (int) round($res);
     }
 }

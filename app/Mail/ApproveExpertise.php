@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Expertise;
 use App\ExpertiseInfo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -12,16 +13,16 @@ class ApproveExpertise extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $expertise;
+    private $expertiseInfo;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Expertise $expertise)
+    public function __construct(ExpertiseInfo $expertiseInfo)
     {
-        $this->expertise = $expertise;
+        $this->expertiseInfo = $expertiseInfo;
     }
 
     /**
@@ -33,7 +34,7 @@ class ApproveExpertise extends Mailable
     {
         return $this->from(config('mail.from.address'))
             ->view('mail.approveDocument')->with([
-                'url' => route('page.expertise.edit', ['expertise' => $this->expertise->id])
+                'url' => route('page.expertise.info.show', ['expertiseInfo' => $this->expertiseInfo->id])
             ])->subject('Новая экспертиза на подтверждение');
     }
 }

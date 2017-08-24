@@ -24,6 +24,25 @@
         </div>
     </div>
 
+    <div class="uk-container uk-container-center">
+        <form action="{{ route('page.correspondence.correspondent.store') }}" class="uk-form uk-margin-top{{ ($errors->has('name')) ? '' : ' uk-hidden' }}" id="add-correspondent" method="post">
+            {{ csrf_field() }}
+            <input type="hidden" name="store_correspondent" value="1">
+            <div>
+                <label>Имя корреспондента</label>
+                <div class="uk-margin-small-top">
+                    <input type="text" name="name" value="{{ old('name') }}" class="uk-width-1-1">
+                </div>
+            </div>
+            @if ($errors->has('name'))
+                <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('name') }}</p>
+            @endif
+            <div class="uk-margin-top uk-text-right">
+                <button class="uk-button uk-button-success">Добавить</button>
+            </div>
+        </form>
+    </div>
+
     @if(auth()->user()->position_id == 4)
         <div class="uk-container uk-container-center uk-hidden" id="register-number">
             <form action="{{ route('page.number.register') }}" class="uk-margin-top uk-form" method="post">

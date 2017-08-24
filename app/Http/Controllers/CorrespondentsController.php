@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Correspondent;
+use App\Http\Requests\CreateCorrespondent;
 use Illuminate\Http\Request;
 
 class CorrespondentsController extends Controller
@@ -18,16 +19,16 @@ class CorrespondentsController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(CreateCorrespondent $request)
     {
         if($request->has('store_correspondent')) {
             $correspondent = new Correspondent();
 
-            $correspondent->name = strtolower($request->input('correspondent'));
+            $correspondent->name = $request->input('name');
 
             $correspondent->save();
 
-            return response()->json($correspondent, 200);
+            return redirect()->back();
         }
     }
 }

@@ -45,9 +45,4 @@ class Expertise extends Model
     {
         return $this->hasMany(ExpertiseInfo::class, 'expertise_id', 'id');
     }
-
-    public function info()
-    {
-        return $this->infos->where('user_id', auth()->user()->id)->first();
-    }
 }

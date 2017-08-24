@@ -41,6 +41,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('create.html', 'ExpertisesController@create')->name('page.expertise.create');
         Route::get('{expertise}/show.html', 'ExpertisesController@show')->name('page.expertise.show');
         Route::get('{expertiseInfo}/edit.html', 'ExpertisesController@edit')->name('page.expertise.edit');
+        Route::get('{expertiseInfo}/info/show.html', 'ExpertisesController@info_show')->name('page.expertise.info.show');
+        Route::post('{expertiseInfo}/approve/{expertiseApprove}/answer.html', 'ExpertisesController@approve_answer')->name('page.expertise.approve.answer');
         Route::post('{expertiseInfo}/update.html', 'ExpertisesController@update')->name('page.expertise.update');
         Route::post('{expertiseInfo}/stop.html', 'ExpertisesController@stop')->name('page.expertise.stop');
         Route::post('{expertiseInfo}/restart.html', 'ExpertisesController@restart')->name('page.expertise.restart');
@@ -67,6 +69,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('outcome/store.html', 'CorrespondencesController@store_outcome')->name('page.correspondence.store.outcome');
         Route::post('correspondence.html', 'CorrespondencesController@correspondence')->name('page.correspondence');
         Route::post('correspondent.html', 'CorrespondentsController@get')->name('page.correspondence.correspondent');
+        Route::post('correspondent/store.html', 'CorrespondentsController@store')->name('page.correspondence.correspondent.store');
     });
 
     Route::post('number/register.html', 'CorrespondencesController@number_register')->name('page.number.register');

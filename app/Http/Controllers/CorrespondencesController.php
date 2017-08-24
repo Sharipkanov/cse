@@ -67,7 +67,9 @@ class CorrespondencesController extends Controller
 
     public function create_outcome(Language $language, DocumentType $documentType, Document $document)
     {
-        $correspondence = $document->task()->correspondence();
+        $task = $document->task();
+
+        $correspondence = ($task) ? $task->correspondence() : null;
 
         return response()->view('pages.correspondence.create-outcome', [
             'title' => 'Создание регистрационной карточки исходящего документа | ' .config('app.name'),

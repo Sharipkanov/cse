@@ -12,11 +12,7 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-space-between">
                 <div>
-                    {{--<form class="uk-display-inline">
-                        <button type="submit" class="uk-button uk-button-primary">Соглосовать</button>
-                    </form>--}}
-
-                    @if(!$expertiseInfo->is_stopped)
+                    @if(!$expertiseInfo->is_stopped && $expertiseInfo->status < 3)
                         <form action="{{ route('page.expertise.approve', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-display-inline" method="post">
                             {{ csrf_field() }}
                             <button class="uk-button uk-button-primary">Соглосовать</button>
@@ -25,7 +21,7 @@
                             <button class="uk-button uk-button-danger" data-uk-toggle="{target:'#suspension', animation:'uk-animation-slide-right, uk-animation-slide-right'}">Приостановить</button>
                         @endif
                     @endif
-                    @if($expertiseInfo->is_stopped)
+                    @if($expertiseInfo->is_stopped && !count($approves))
                         <form action="{{ route('page.expertise.restart', ['expertiseInfo' => $expertiseInfo->id]) }}" class="uk-display-inline" method="post">
                             {{ csrf_field() }}
                             <button type="submit" class="uk-button uk-button-success">Возобновть</button>
@@ -502,19 +498,19 @@
                         <div class="uk-form-row">
                             <label class="uk-form-label">Дата документа:</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <input value="{{ ($expertiseInfo->payment_note_document_date) ? $expertiseInfo->payment_note_document_date : '' }}" type="text" class="uk-width-1-1{{ $errors->has('payment_note_document_date') ? ' uk-form-danger' : '' }}" name="payment_note_document_date" placeholder="Выберите дату документа" data-uk-datepicker="{maxDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
+                                <input value="{{ ($expertiseInfo->payment_note_document_date) ? $expertiseInfo->payment_note_document_date : '' }}" type="text" class="uk-width-1-1{{ $errors->has('payment_note_document_date') ? ' uk-form-danger' : '' }}" name="payment_note_document_date" placeholder="Выберите дату документа" data-uk-datepicker="{minDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                             </div>
                         </div>
                         <div class="uk-form-row">
                             <label class="uk-form-label">Причины возврата без исполнения:</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <textarea name="info" class="uk-width-1-1{{ $errors->has('return_reason') ? ' uk-form-danger' : '' }}" rows="7" placeholder="Укажите причину возврата без исполнения">{{ $expertiseInfo->return_reason }}</textarea>
+                                <textarea name="return_reason" class="uk-width-1-1{{ $errors->has('return_reason') ? ' uk-form-danger' : '' }}" rows="7" placeholder="Укажите причину возврата без исполнения">{{ $expertiseInfo->return_reason }}</textarea>
                             </div>
                         </div>
                         <div class="uk-form-row">
                             <label class="uk-form-label">Причины СНДЗ:</label>
                             <div class="uk-form-controls uk-margin-small-top">
-                                <textarea name="info" class="uk-width-1-1{{ $errors->has('rigs') ? ' uk-form-danger' : '' }}" rows="7" placeholder="Укажите причины СНДЗ">{{ $expertiseInfo->rigs }}</textarea>
+                                <textarea name="rigs" class="uk-width-1-1{{ $errors->has('rigs') ? ' uk-form-danger' : '' }}" rows="7" placeholder="Укажите причины СНДЗ">{{ $expertiseInfo->rigs }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -547,21 +543,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="uk-margin-top">
-                    <div class="uk-grid">
-                        <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Основание</p>
-                        </div>
-                        <div class="uk-width-4-6">
-                            @if($expertiseInfo->document_id)
-                                <a target="_blank" href="{{ route('page.document.show', ['document' => $expertiseInfo->document_id]) }}">Просмотреть</a>
-                            @endif
-                            @if($expertiseInfo->correspondence_id)
-                                <a target="_blank" href="{{ route('page.correspondence.show', ['correspondence' => $expertiseInfo->correspondence_id]) }}">Просмотреть</a>
-                            @endif
+
+                @if($expertiseInfo->document_id || $expertiseInfo->correspondence_id)
+                    <div class="uk-margin-top">
+                        <div class="uk-grid">
+                            <div class="uk-width-2-6">
+                                <p class="uk-text-bold">Основание</p>
+                            </div>
+                            <div class="uk-width-4-6">
+                                @if($expertiseInfo->document_id)
+                                    <a target="_blank" href="{{ route('page.document.show', ['document' => $expertiseInfo->document_id]) }}">Просмотреть</a>
+                                @endif
+                                @if($expertiseInfo->correspondence_id)
+                                    <a target="_blank" href="{{ route('page.correspondence.show', ['correspondence' => $expertiseInfo->correspondence_id]) }}">Просмотреть</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">

@@ -16,6 +16,7 @@ class CreateExpertiseInfosTable extends Migration
         Schema::create('expertise_infos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('expertise_id');
+            $table->integer('expertise_speciality_id');
             $table->string('category_of_difficulty')->nullable()->default(null);
             $table->integer('questions_count')->default(0);
             $table->integer('objects_count')->default(0);

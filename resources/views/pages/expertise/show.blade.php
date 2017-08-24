@@ -7,11 +7,10 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-space-between">
                 <div>
-                    @if(count($executors) && $income_task && $income_task->status == 0)
-                        <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
-                    @endif
-                    @if($income_task && $income_task->status == 1 && $item->info())
-                        <a href="{{ route('page.expertise.edit', ['expertiseInfo' => $item->info()->id]) }}" class="uk-button">Редактировать</a>
+                    @if(count($executors))
+                        @if($income_task && $income_task->status == 0 || auth()->user()->position_id == 2 && $item->status == 0)
+                            <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
+                        @endif
                     @endif
                     @if($income_task && $income_task->status == 0 && !$outcome_task)
                         <form action="{{ route('page.expertise.task.set') }}" class="uk-display-inline" method="post">
@@ -26,8 +25,9 @@
                 </div>
             </div>
 
-            @if(count($executors) && $income_task && $income_task->status == 0)
-                <form id="approve" action="{{ route('page.expertise.task.store') }}" class="uk-form uk-margin-top uk-hidden" method="post">
+            @if(count($executors))
+                @if($income_task && $income_task->status == 0 || auth()->user()->position_id == 2 && $item->status == 0)
+                    <form id="approve" action="{{ route('page.expertise.task.store') }}" class="uk-form uk-margin-top uk-hidden" method="post">
                     {{ csrf_field() }}
                     @if($task_parent)
                         <input type="hidden" name="parent_id" value="{{ $task_parent }}">
@@ -54,6 +54,62 @@
                         <button class="uk-button uk-button-success">Поручить</button>
                     </div>
                 </form>
+                @endif
+            @endif
+
+            @if(count($tasks))
+                <table class="uk-table uk-table-condensed">
+                    <thead>
+                    <tr>
+                        <th class="width-content">Код</th>
+                        <th>Название</th>
+                        <th>Передано от</th>
+                        <th class="width-content">Передано к</th>
+                        <th class="width-content">Статус</th>
+                        <th class="width-content"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($tasks as $task)
+                        @foreach($task->specialities as $speciality)
+                            <tr>
+                                <td class="width-content">{{ $speciality->code }}</td>
+                                <td>{{ $speciality->name }}</td>
+                                <td class="width-content">{{ $task->author()->last_name .' '. str_limit($task->author()->first_name, 1, '.') . str_limit($task->author()->middle_name, 1, '') }}</td>
+                                <td class="width-content">{{ $task->executor()->last_name .' '. str_limit($task->executor()->first_name, 1, '.') . str_limit($task->executor()->middle_name, 1, '') }}</td>
+                                <td class="width-content">
+                                    @if($task->status == 4)
+                                        Отклонен в соглсовании
+                                    @elseif($task->status == 3)
+                                        Согласован
+                                    @elseif($task->status == 2)
+                                        Ждет соглосования
+                                    @elseif($task->status == 1)
+                                        В процесе
+                                    @elseif($task->status == 0)
+                                        Отправлен на поручение
+                                    @endif
+                                </td>
+                                <td class="width-content">
+                                    @if($task->status)
+                                        @if(auth()->user()->id == $task->executor()->id)
+                                            @if($task->status == 3)
+                                                <a class="uk-button uk-width-1-1" href="{{ route('page.expertise.info.show', ['expertiseInfo' => $expertiseInfos[$speciality->id]->id]) }}">Просмотреть</a>
+                                            @else
+                                                <a class="uk-button uk-width-1-1" href="{{ route('page.expertise.edit', ['expertiseInfo' => $expertiseInfos[$speciality->id]->id]) }}">Редактировать</a>
+                                            @endif
+                                        @else
+                                            <a class="uk-button uk-width-1-1" href="{{ route('page.expertise.info.show', ['expertiseInfo' => $expertiseInfos[$speciality->id]->id]) }}">Просмотреть</a>
+                                        @endif
+                                    @else
+                                        <button class="uk-button" disabled="">Переприсвоен</button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                    </tbody>
+            </table>
             @endif
 
             <div class="uk-form uk-margin-top uk-margin-large-bottom">

@@ -190,10 +190,6 @@ class DocumentsController extends Controller
             ]);
 
         return redirect()->back();
-
-        /*$task->where(['parent_id' => $task->parent_id])->orWhere('id', $task->parent_id)->update([
-            'status' => 1
-        ]);*/
     }
 
     public function approve_answer(Request $request, Document $document, DocumentApprove $documentApprove)
