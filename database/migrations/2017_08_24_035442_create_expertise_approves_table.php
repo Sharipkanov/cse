@@ -13,15 +13,17 @@ class CreateExpertiseApprovesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_approves', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('expertise_info_id');
-            $table->integer('user_id');
-            $table->tinyInteger('order');
-            $table->text('info')->nullable()->default(null);
-            $table->tinyInteger('status')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_approves')) {
+            Schema::create('expertise_approves', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('expertise_info_id');
+                $table->integer('user_id');
+                $table->tinyInteger('order');
+                $table->text('info')->nullable()->default(null);
+                $table->tinyInteger('status')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

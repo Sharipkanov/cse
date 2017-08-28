@@ -13,12 +13,14 @@ class CreateExpertiseSpecialistsTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('expertise_specialists', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('expert_id');
-            $table->integer('expertise_speciality_id');
-            $table->timestamps();
-        });*/
+        if (!Schema::hasTable('expertise_specialists')) {
+            Schema::create('expertise_specialists', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('expert_id');
+                $table->integer('expertise_speciality_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -28,6 +30,6 @@ class CreateExpertiseSpecialistsTable extends Migration
      */
     public function down()
     {
-//        Schema::dropIfExists('expertise_specialists');
+        Schema::dropIfExists('expertise_specialists');
     }
 }

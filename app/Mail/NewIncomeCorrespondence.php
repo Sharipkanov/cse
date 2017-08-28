@@ -34,6 +34,6 @@ class NewIncomeCorrespondence extends Mailable
         return $this->from(config('mail.from.address'))
             ->view('mail.newIncomeCorrespondence')->with([
                 'url' => route('page.correspondence.show', ['correspondence' => $this->correspondence->id])
-            ])->subject('Новая регистрационной карточки входящего документа');
+            ])->subject('Новая регистрационная карточка входящего документа');
     }
 }

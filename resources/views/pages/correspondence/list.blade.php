@@ -9,7 +9,7 @@
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="uk-flex uk-flex-middle">
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Зарегистрирован (Не присвоен)</small></div>
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистраций</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистрации</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                 </div>
                 <div>
@@ -29,7 +29,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="store_correspondent" value="1">
             <div>
-                <label>Имя корреспондента</label>
+                <label>Корреспондент</label>
                 <div class="uk-margin-small-top">
                     <input type="text" name="name" value="{{ old('name') }}" class="uk-width-1-1">
                 </div>

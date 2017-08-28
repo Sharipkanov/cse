@@ -13,12 +13,14 @@ class CreateExpertiseStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_statuses', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->boolean('primary');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_statuses')) {
+            Schema::create('expertise_statuses', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->boolean('primary');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

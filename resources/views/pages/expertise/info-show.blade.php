@@ -24,24 +24,24 @@
                     <div class="uk-form-row">
                         <label class="uk-flex uk-flex-middle approve-type">
                             <span class="uk-margin-small-right"><input type="radio" name="status" value="1"></span>
-                            <span>Соглосовать</span>
+                            <span>Согласен</span>
                         </label>
                         <label class="uk-flex uk-flex-middle uk-margin-small-top approve-type">
                             <span class="uk-margin-small-right"><input type="radio" name="status" value="2"></span>
-                            <span>Соглосовать с примичанием</span>
+                            <span>Соглосен с замечаниями</span>
                         </label>
                         <label class="uk-flex uk-flex-middle uk-margin-small-top approve-type">
                             <span class="uk-margin-small-right"><input type="radio" name="status" value="3"></span>
-                            <span>Отклонить</span>
+                            <span>Не согласен</span>
                         </label>
                     </div>
                     <div class="uk-form-row uk-hidden" id="approve-info">
                         <div class="uk-form-controls uk-margin-small-top">
-                            <textarea name="info" class="uk-width-1-1" rows="6" placeholder="Примичание"></textarea>
+                            <textarea name="info" class="uk-width-1-1" rows="6" placeholder="Замечания"></textarea>
                         </div>
                     </div>
                     <div class="uk-form-row uk-text-right">
-                        <button class="uk-button uk-button-success">Ответить</button>
+                        <button class="uk-button uk-button-success">Отправить</button>
                     </div>
                 </form>
             @endif
@@ -58,9 +58,9 @@
                                     @if($approve->status == 0)
                                         <p>Ожидает</p>
                                     @elseif($approve->status == 1)
-                                        <p>Соглосован</p>
+                                        <p>Согласован</p>
                                     @elseif($approve->status == 2)
-                                        <p>Соглосован с примичанием</p>
+                                        <p>Согласован с замечаними</p>
                                         <textarea class="uk-width-1-1" rows="7" disabled>{{ $approve->info }}</textarea>
                                     @elseif($approve->status == 3)
                                         <p>Отклонен</p>
@@ -121,7 +121,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Категория дела:</p>
+                                <p class="uk-text-bold">Категория дела</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->category()->name }}</p>
@@ -132,7 +132,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">№ дела:</p>
+                                <p class="uk-text-bold">№ дела</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->case_number }}</p>
@@ -143,7 +143,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">№ статьи:</p>
+                                <p class="uk-text-bold">№ статьи</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->article_number }}</p>
@@ -154,7 +154,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Статус:</p>
+                                <p class="uk-text-bold">Статус</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->status()->name }}</p>
@@ -165,7 +165,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Дополнительный статус:</p>
+                                <p class="uk-text-bold">Дополнительный статус</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->addition_status()->name }}</p>
@@ -176,7 +176,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Шифр экспертизы:</p>
+                                <p class="uk-text-bold">Шифр экспертизы</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <ul class="uk-list">
@@ -191,7 +191,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Регион назначивший экспертизу:</p>
+                                <p class="uk-text-bold">Регион назначивший экспертизу</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->region()->name }}</p>
@@ -202,7 +202,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Наименование органа:</p>
+                                <p class="uk-text-bold">Наименование органа</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->agency()->name }}</p>
@@ -213,7 +213,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Орган назначивший экспертизу:</p>
+                                <p class="uk-text-bold">Орган назначивший экспертизу</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->organ()->name }}</p>
@@ -225,7 +225,7 @@
                         <div class="uk-margin-top">
                             <div class="uk-grid">
                                 <div class="uk-width-2-6">
-                                    <p class="uk-text-bold">Введите название органа:</p>
+                                    <p class="uk-text-bold">Введите название органа</p>
                                 </div>
                                 <div class="uk-width-4-6">
                                     <p>{{ $item->expertise_organ_name }}</p>
@@ -237,7 +237,7 @@
                     <hr>
 
                     <div class="">
-                        <span class="uk-h4">Данные лица назначевшего экспертизу</span>
+                        <span class="uk-h4">Данные лица назначившего экспертизу</span>
                     </div>
 
                     <div class="uk-margin-top">
@@ -256,7 +256,7 @@
                         <div class="uk-margin-top">
                             <div class="uk-grid">
                                 <div class="uk-width-2-6">
-                                    <p class="uk-text-bold">Должность:</p>
+                                    <p class="uk-text-bold">Должность</p>
                                 </div>
                                 <div class="uk-width-4-6">
                                     <p>{{ $item->expertise_user_position }}</p>
@@ -269,7 +269,7 @@
                         <div class="uk-margin-top">
                             <div class="uk-grid">
                                 <div class="uk-width-2-6">
-                                    <p class="uk-text-bold">Звание:</p>
+                                    <p class="uk-text-bold">Звание</p>
                                 </div>
                                 <div class="uk-width-4-6">
                                     <p>{{ $item->expertise_user_rank }}</p>
@@ -306,7 +306,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Категория сложности:</p>
+                            <p class="uk-text-bold">Категория сложности</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->category_of_difficulty) ? $expertiseInfo->category_of_difficulty : '' }}</p>
@@ -316,7 +316,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Количество поставленных вопросов:</p>
+                            <p class="uk-text-bold">Количество поставленных вопросов</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->questions_count) ? $expertiseInfo->questions_count : '' }}</p>
@@ -326,7 +326,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Количество объектов :</p>
+                            <p class="uk-text-bold">Количество объектов</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->objects_count) ? $expertiseInfo->objects_count : '' }}</p>
@@ -336,7 +336,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Срок производства:</p>
+                            <p class="uk-text-bold">Срок производства</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->expiration_date) ? $expertiseInfo->expiration_date : '' }}</p>
@@ -346,7 +346,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Результата исследования:</p>
+                            <p class="uk-text-bold">Результата исследования</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->result_of_research) ? $expertiseInfo->result_of_research : '' }}</p>
@@ -356,7 +356,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Категорические выводы:</p>
+                            <p class="uk-text-bold">Категорические выводы</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->categorical_conclusions) ? $expertiseInfo->categorical_conclusions : '' }}</p>
@@ -367,7 +367,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Вероятные выводы:</p>
+                            <p class="uk-text-bold">Вероятные выводы</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->probable_conclusions) ? $expertiseInfo->categorical_conclusions : '' }}</p>
@@ -378,7 +378,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">НПВ:</p>
+                            <p class="uk-text-bold">НПВ</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->wnp) ? $expertiseInfo->wnp : '' }}</p>
@@ -389,7 +389,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Количество не решенных вопросов :</p>
+                            <p class="uk-text-bold">Количество не решенных вопросов</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->unsolved_issues_count) ? $expertiseInfo->unsolved_issues_count : '' }}</p>
@@ -400,7 +400,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Дано выводов (ВСЕГО) :</p>
+                            <p class="uk-text-bold">Дано выводов (ВСЕГО)</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->conclusions_count) ? $expertiseInfo->conclusions_count : '' }}</p>
@@ -411,7 +411,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Категорические выводы (ПОЛОЖИТЕЛЬНЫЕ):</p>
+                            <p class="uk-text-bold">Категорические выводы (ПОЛОЖИТЕЛЬНЫЕ)</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->categorical_conclusions_positive) ? $expertiseInfo->categorical_conclusions_positive : '' }}</p>
@@ -422,7 +422,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Категорические выводы (ОТРИЦАТЕЛЬНЫЕ):</p>
+                            <p class="uk-text-bold">Категорические выводы (ОТРИЦАТЕЛЬНЫЕ)</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->categorical_conclusions_negative) ? $expertiseInfo->categorical_conclusions_negative : '' }}</p>
@@ -433,7 +433,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Стоимость исследования:</p>
+                            <p class="uk-text-bold">Стоимость исследования</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->cost) ? $expertiseInfo->cost : '' }}</p>
@@ -444,7 +444,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Отметка об оплате:</p>
+                            <p class="uk-text-bold">Отметка об оплате</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->payment_note) ? $expertiseInfo->payment_note : '' }}</p>
@@ -455,7 +455,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">№ документа:</p>
+                            <p class="uk-text-bold">№ документа</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->payment_note_document_number) ? $expertiseInfo->payment_note_document_number : '' }}</p>
@@ -466,7 +466,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Дата документа:</p>
+                            <p class="uk-text-bold">Дата документа</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->payment_note_document_date) ? $expertiseInfo->payment_note_document_date : '' }}</p>
@@ -477,7 +477,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Причины возврата без исполнения:</p>
+                            <p class="uk-text-bold">Причины возврата без исполнения</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->return_reason) ? $expertiseInfo->return_reason : '' }}</p>
@@ -488,7 +488,7 @@
                 <div class="uk-form-row">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Причины СНДЗ:</p>
+                            <p class="uk-text-bold">Причины СНДЗ</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ ($expertiseInfo->rigs) ? $expertiseInfo->rigs : '' }}</p>

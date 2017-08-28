@@ -13,20 +13,22 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('middle_name')->nullable()->default(null);
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->integer('department_id');
-            $table->integer('subdivision_id')->default(0);
-            $table->integer('position_id');
-            $table->boolean('is_director')->default(0);
-            $table->rememberToken();
-            $table->timestamps();
-        });*/
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('first_name');
+                $table->string('last_name');
+                $table->string('middle_name')->nullable()->default(null);
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->integer('department_id');
+                $table->integer('subdivision_id')->default(0);
+                $table->integer('position_id');
+                $table->boolean('is_director')->default(0);
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -36,6 +38,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-//        Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 }

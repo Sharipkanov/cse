@@ -23,19 +23,19 @@
                         {{ csrf_field() }}
                         @if(count($executors))
                             <div class="uk-form-row">
-                                <label class="uk-form-label">Укажите срок исполнения</label>
-                                <div class="uk-form-controls uk-margin-small-top">
-                                    <select name="executor_id" class="uk-width-1-1">
-                                        <option value="">Выберите исполнителя</option>
-                                        @foreach($executors as $executor)
-                                            <option value="{{ $executor->id }}" {{ (old('executor_id') == $executor->id) ? 'selected' : ''}}>{{ $executor->last_name }} {{ $executor->first_name }} {{ $executor->middle_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <label class="uk-form-label">Выберите исполнитя</label>
+                                @foreach($executors as $executor)
+                                    <div class="uk-form-controls uk-margin-small-top">
+                                        <label class="uk-flex-inline">
+                                            <span><input name="executors[{{$executor->id}}]" type="checkbox" value="{{ $executor->id }}" {{ (old('executors.'. $executor->id) == $executor->id) ? 'checked' : ''}}></span>
+                                            <span class="uk-margin-small-left"><span>{{ $executor->last_name }} {{ $executor->first_name }} {{ $executor->middle_name }}</span></span>
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
                         @endif
-                        @if ($errors->has('executor_id'))
-                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executor_id') }}</p>
+                        @if ($errors->has('executors'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executors') }}</p>
                         @endif
                         <div class="uk-form-row">
                             <label class="uk-form-label">Укажите срок исполнения</label>

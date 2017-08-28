@@ -13,11 +13,13 @@ class CreateExpertiseCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_categories')) {
+            Schema::create('expertise_categories', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

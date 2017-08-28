@@ -12,7 +12,7 @@
                     <hr>
                     <div>
                         <div>
-                            <label class="uk-form-label">Язык обращения:</label>
+                            <label class="uk-form-label">Язык обращения</label>
                             <div class="uk-form-controls uk-margin-small-top uk-flex">
                                 @foreach($languages as $language)
                                     <div class="{{ ($loop->first) ? 'uk-margin-right' : ''}}">
@@ -32,14 +32,14 @@
 
                         @if($correspondence)
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Корреспондент:</label>
+                                <label class="uk-form-label">Корреспондент</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="hidden" name="correspondent_id" value="{{ $correspondence->correspondent()->id }}">
                                     <input name="" class="uk-width-1-1" value="{{ $correspondence->correspondent()->name }}" readonly>
                                 </div>
                             </div>
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Ответ на входящий:</label>
+                                <label class="uk-form-label">Ответ на входящий</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="hidden" name="reply_correspondence_id" value="{{ $correspondence->id }}">
                                     <input name="" class="uk-width-1-1" value="{{ $correspondence->register_number }}" readonly>
@@ -47,9 +47,9 @@
                             </div>
                         @else
                             <div class="uk-margin-top uk-position-relative">
-                                <label class="uk-form-label">Корреспондент:</label>
+                                <label class="uk-form-label">Корреспондент</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
+                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите Корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
                                     <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
                                 </div>
                                 <div class="drop-down" id="correspondent-drop-down">
@@ -62,7 +62,7 @@
                         @endif
 
                         <div class="uk-margin-top">
-                            <label class="uk-form-label">Страницы:</label>
+                            <label class="uk-form-label">Количесвто страниц</label>
                             <div class="uk-form-controls uk-margin-small-top">
                                 <input name="pages" class="uk-width-1-1{{ $errors->has('pages') ? ' uk-form-danger' : '' }}" value="{{ old('info') }}" placeholder="Введите количество страниц">
                             </div>
@@ -72,7 +72,7 @@
                         @endif
 
                         <div class="uk-margin-top">
-                            <label class="uk-form-label">ФИО исполнителя:</label>
+                            <label class="uk-form-label">ФИО исполнителя</label>
                             <div class="uk-form-controls uk-margin-small-top">
                                 <input name="executor_fullname" class="uk-width-1-1" value="{{ $document->author()->last_name .' '. $document->author()->first_name .' '. $document->author()->middle_name}}" readonly>
                             </div>

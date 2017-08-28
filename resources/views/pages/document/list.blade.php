@@ -8,9 +8,9 @@
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="uk-margin-top uk-flex uk-flex-middle">
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Новый (Еще не отправлен на согласование)</small></div>
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На соглосавиний</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На согласовании</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Согласован</small></div>
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status danger uk-margin-small-right"></div><small>Не прошел соглосования</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status danger uk-margin-small-right"></div><small>Не прошел согласование</small></div>
                 </div>
                 <div><a href="{{ route('page.document.create') }}" class="uk-button uk-button-primary =">Создать документ</a></div>
             </div>

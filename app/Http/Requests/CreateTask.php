@@ -26,7 +26,7 @@ class CreateTask extends FormRequest
     public function rules()
     {
         return [
-            'executor_id' => 'required',
+            'executors' => 'required',
             'execution_date' => 'required',
             'execution_time' => 'required',
             'info' => 'required|max:255'
@@ -41,7 +41,7 @@ class CreateTask extends FormRequest
     public function messages()
     {
         return [
-            'executor_id.required' => 'Выберите исполнителя',
+            'executors.required' => 'Выберите одного или несколько исполнителей',
             'execution_date.required' => 'Срок исполнения обезателен к заполнению',
             'execution_time.required' => 'Время исполнения обезательно к заполнению',
             'info.required' => 'Информация задания обезательна к заполнению',

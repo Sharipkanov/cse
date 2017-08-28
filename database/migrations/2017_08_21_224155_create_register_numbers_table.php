@@ -13,13 +13,15 @@ class CreateRegisterNumbersTable extends Migration
      */
     public function up()
     {
-        Schema::create('register_numbers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('number');
-            $table->integer('user_id');
-            $table->boolean('is_income')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('register_numbers')) {
+            Schema::create('register_numbers', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('number');
+                $table->integer('user_id');
+                $table->boolean('is_income')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

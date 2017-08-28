@@ -7,7 +7,7 @@
         <div class="uk-container uk-container-center">
             <div class="uk-flex uk-flex-middle uk-flex-space-between">
                 <div class="uk-margin-top uk-flex uk-flex-middle">
-                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Отправлен на поручение</small></div>
+                    <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Отправлен на исполнение</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>В процесе</small></div>
                     <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Завершен</small></div>
                 </div>

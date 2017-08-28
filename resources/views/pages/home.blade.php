@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <a href="{{ route('page.structure') }}" class="uk-panel uk-panel-box uk-flex uk-flex-middle uk-flex-center">
-                        <span class="uk-h3">Структура и ОК</span>
+                        <span class="uk-h3">Структура предприятия</span>
                     </a>
                 </div>
                 <div>

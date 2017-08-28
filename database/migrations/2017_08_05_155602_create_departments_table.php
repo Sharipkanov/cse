@@ -13,13 +13,15 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('departments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->integer('parent_id')->default(0);
-            $table->integer('leader_id')->default(0);
-            $table->timestamps();
-        });*/
+        if (!Schema::hasTable('departments')) {
+            Schema::create('departments', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name')->unique();
+                $table->integer('parent_id')->default(0);
+                $table->integer('leader_id')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -29,6 +31,6 @@ class CreateDepartmentsTable extends Migration
      */
     public function down()
     {
-//        Schema::dropIfExists('departments');
+        Schema::dropIfExists('departments');
     }
 }

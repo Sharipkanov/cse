@@ -13,12 +13,14 @@ class CreateExpertiseAgenciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_agencies', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('expertise_region_id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_agencies')) {
+            Schema::create('expertise_agencies', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('expertise_region_id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

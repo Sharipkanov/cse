@@ -13,7 +13,7 @@
                     <div class="uk-grid uk-grid-width-1-2">
                         <div>
                             <div>
-                                <label class="uk-form-label">Язык обращения:</label>
+                                <label class="uk-form-label">Язык обращения</label>
                                 <div class="uk-form-controls uk-margin-small-top uk-flex">
                                     @foreach($languages as $language)
                                         <div class="{{ ($loop->first) ? 'uk-margin-right' : ''}}">
@@ -32,9 +32,9 @@
                             @endif
 
                             <div class="uk-margin-top uk-position-relative">
-                                <label class="uk-form-label">Корреспондент:</label>
+                                <label class="uk-form-label">Корреспондент</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите имя корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
+                                    <input type="text" name="" id="correspondent-search-input" placeholder="Введите корреспондента" class="uk-width-1-1{{ ($errors->has('correspondent_id')) ? ' uk-form-danger' : '' }}">
                                     <input type="hidden" name="correspondent_id"  value="" id="correspondent-input">
                                 </div>
                                 <div class="drop-down" id="correspondent-drop-down">
@@ -46,7 +46,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">ФИО исполнителя:</label>
+                                <label class="uk-form-label">ФИО исполнителя</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input name="executor_fullname" class="uk-width-1-1{{ $errors->has('executor_fullname') ? ' uk-form-danger' : '' }}" value="{{ old('info') }}" placeholder="Введите ФИО исполнителя">
                                 </div>
@@ -56,7 +56,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Исходящий №:</label>
+                                <label class="uk-form-label">Исходящий №</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input name="outcome_number" class="uk-width-1-1{{ $errors->has('outcome_number') ? ' uk-form-danger' : '' }}" value="{{ old('info') }}" placeholder="Введите исходящий номер">
                                 </div>
@@ -66,7 +66,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Дата исходящего:</label>
+                                <label class="uk-form-label">Дата исходящего</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1{{ $errors->has('outcome_date') ? ' uk-form-danger' : '' }}" name="outcome_date" placeholder="Выберите дату исходящего" data-uk-datepicker="{maxDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                                 </div>
@@ -76,7 +76,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Срок исполнения:</label>
+                                <label class="uk-form-label">Срок исполнения</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1" name="execution_period" placeholder="Выберите cрок исполнения" data-uk-datepicker="{minDate: '{{ date('Y-m-d') }}', format:'YYYY-MM-DD', i18n: {months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}">
                                 </div>
@@ -86,7 +86,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Страницы:</label>
+                                <label class="uk-form-label">Страницы</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input name="pages" class="uk-width-1-1{{ $errors->has('pages') ? ' uk-form-danger' : '' }}" value="{{ old('info') }}" placeholder="Введите количество страниц">
                                 </div>
@@ -107,9 +107,9 @@
                         </div>
                         <div>
                             <div class="uk-position-relative">
-                                <label class="uk-form-label">Ответ на исходящий:</label>
+                                <label class="uk-form-label">Ответ на исходящий</label>
                                 <div class="uk-form-controls uk-margin-small-top uk-position-relative">
-                                    <input id="correspondence-search-input" type="text" placeholder="Введите шифр или название экспертизы" class="uk-width-1-1{{ $errors->has('reply_correspondence_id') ? ' uk-form-danger' : '' }}" >
+                                    <input id="correspondence-search-input" type="text" placeholder="Введите № исходящего документа" class="uk-width-1-1{{ $errors->has('reply_correspondence_id') ? ' uk-form-danger' : '' }}" >
                                     <input type="hidden" name="reply_correspondence_id" id="correspondence-input">
                                 </div>
                                 <div id="correspondence-drop-down" class="drop-down">
@@ -118,9 +118,9 @@
                                 </ul>
                             </div>
                             <div class="uk-margin-top ">
-                                <label class="uk-form-label">Получатель:</label>
+                                <label class="uk-form-label">Получатель</label>
                                 <div class="uk-form-controls uk-margin-small-top">
-                                    <input type="text" value="Бекжанов Ж.Л" disabled class="uk-width-1-1">
+                                    <input type="text" value="Бекжанов Ж.Л." disabled class="uk-width-1-1">
                                 </div>
                             </div>
                             <div class="uk-margin-top">

@@ -13,11 +13,13 @@ class CreateDocumentPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('document_permissions', function (Blueprint $table) {
-            $table->integer('id');
-            $table->integer('user_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('document_permissions')) {
+            Schema::create('document_permissions', function (Blueprint $table) {
+                $table->integer('id');
+                $table->integer('user_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

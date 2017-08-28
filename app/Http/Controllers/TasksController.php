@@ -80,45 +80,47 @@ class TasksController extends Controller
      */
     public function store(User $user, CreateTask $request)
     {
-        $task = new Task();
-        $executorId = $request->input('executor_id');
+        foreach ($request->input('executors') as $executor) {
+            $task = new Task();
 
-        $task->executor_id = $executorId;
-        $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
-        $task->info = $request->input('info');
-        $task->user_id = auth()->user()->id;
+            $task->executor_id = $executor;
+            $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
+            $task->info = $request->input('info');
+            $task->user_id = auth()->user()->id;
 
-        $task->save();
+            $task->save();
 
-        $task->register_number = $task->id;
-        $task->update();
+            $task->register_number = $task->id;
+            $task->update();
 
-        Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($task));
+            Mail::to($user->where('id', $executor)->first()->email)->send(new NewTask($task));
+        }
 
         return response()->redirectTo(route('page.task.list'));
     }
 
     public function correspondence_store(User $user, CreateCorrespondeceTask $request)
     {
-        $task = new Task();
-        $executorId = $request->input('executor_id');
+        foreach ($request->input('executors') as $executor) {
+            $task = new Task();
 
-        $task->executor_id = $executorId;
-        $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
-        $task->info = $request->input('info');
-        $task->correspondence_id = $request->input('correspondence_id');
-        $task->user_id = auth()->user()->id;
+            $task->executor_id = $executor;
+            $task->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
+            $task->info = $request->input('info');
+            $task->correspondence_id = $request->input('correspondence_id');
+            $task->user_id = auth()->user()->id;
 
-        $task->save();
+            $task->save();
 
-        $task->register_number = $task->id;
-        $task->update();
+            $task->register_number = $task->id;
+            $task->update();
 
-        $correspondence = $task->correspondence();
-        $correspondence->status = 3;
-        $correspondence->save();
+            $correspondence = $task->correspondence();
+            $correspondence->status = 3;
+            $correspondence->save();
 
-        Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($task));
+            Mail::to($user->where('id', $executor)->first()->email)->send(new NewTask($task));
+        }
 
         return response()->redirectTo(route('page.task.list'));
     }
@@ -166,21 +168,23 @@ class TasksController extends Controller
     {
         $user = auth()->user();
         $newTask = new Task();
-        $executorId = $request->input('executor_id');
+        $executors = $request->input('executors');
 
-        $newTask->executor_id = $executorId;
-        $newTask->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
-        $newTask->info = $request->input('info');
-        $newTask->correspondence_id = $task->correspondence_id;
-        $newTask->user_id = $user->id;
-        $newTask->parent_id = ($task->parent_id) ? $task->parent_id : $task->id;
+        foreach ($executors as $executor) {
+            $newTask->executor_id = $executor;
+            $newTask->execution_period = $request->input('execution_date') . ' ' . $request->input('execution_time');
+            $newTask->info = $request->input('info');
+            $newTask->correspondence_id = $task->correspondence_id;
+            $newTask->user_id = $user->id;
+            $newTask->parent_id = ($task->parent_id) ? $task->parent_id : $task->id;
 
-        $newTask->save();
+            $newTask->save();
 
-        $newTask->register_number = $task->register_number . '_' . $newTask->id;
-        $newTask->update();
+            $newTask->register_number = $task->register_number . '_' . $newTask->id;
+            $newTask->update();
 
-        Mail::to($user->where('id', $executorId)->first()->email)->send(new NewTask($newTask));
+            Mail::to($user->where('id', $executor)->first()->email)->send(new NewTask($newTask));
+        }
 
         return response()->redirectTo(route('page.task.show', ['task' => $task]));
     }

@@ -13,11 +13,13 @@ class CreateExpertiseOrgansTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_organs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_organs')) {
+            Schema::create('expertise_organs', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -20,7 +20,7 @@
                     <div class="uk-grid uk-grid-width-1-2">
                         <div>
                             <div>
-                                <label class="uk-form-label">Фамилия:</label>
+                                <label class="uk-form-label">Фамилия</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1{{ $errors->has('last_name') ? ' uk-form-danger' : '' }}" name="last_name" value="{{ old('last_name') }}">
                                 </div>
@@ -30,7 +30,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Имя:</label>
+                                <label class="uk-form-label">Имя</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1{{ $errors->has('first_name') ? ' uk-form-danger' : '' }}" name="first_name" value="{{ old('first_name') }}">
                                 </div>
@@ -40,7 +40,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Отчество:</label>
+                                <label class="uk-form-label">Отчество</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1{{ $errors->has('middle_name') ? ' uk-form-danger' : '' }}" name="middle_name" value="{{ old('middle_name') }}">
                                 </div>
@@ -50,7 +50,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Электронная почта:</label>
+                                <label class="uk-form-label">Электронная почта</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <input type="text" class="uk-width-1-1{{ $errors->has('email') ? ' uk-form-danger' : '' }}" name="email" value="{{ old('email') }}">
                                 </div>
@@ -61,7 +61,7 @@
                         </div>
                         <div>
                             <div>
-                                <label class="uk-form-label">Отдел:</label>
+                                <label class="uk-form-label">Отдел</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <select class="uk-width-1-1{{($errors->has('department_id')) ? ' uk-form-danger' : ''}}" name="department_id" id="expertise-region-select">
                                         <option value="" {{ (old('department_id') == '') ? 'selected' : '' }} disabled>Выберите отдел</option>
@@ -75,7 +75,7 @@
                                 <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('department_id') }}</p>
                             @endif
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Подотдел:</label>
+                                <label class="uk-form-label">Подотдел</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <select class="uk-width-1-1{{($errors->has('subdivision_id')) ? ' uk-form-danger' : ''}}" name="subdivision_id">
                                         <option value="">Выберите пододел</option>
@@ -93,7 +93,7 @@
                             @endif
 
                             <div class="uk-margin-top">
-                                <label class="uk-form-label">Должность:</label>
+                                <label class="uk-form-label">Должность</label>
                                 <div class="uk-form-controls uk-margin-small-top">
                                     <select name="position_id" class="uk-width-1-1{{ $errors->has('position_id') ? ' uk-form-danger' : '' }}">
                                         <option value="">Выберите должность</option>
@@ -110,7 +110,7 @@
                     </div>
                     <hr>
                     <div class="uk-text-right">
-                        <button type="submit" class="uk-button uk-button-success">Создать пользователя</button>
+                        <button type="submit" class="uk-button uk-button-success">Зарегистрировать пользователя</button>
                     </div>
                 </fieldset>
             </form>

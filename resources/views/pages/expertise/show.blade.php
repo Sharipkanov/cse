@@ -9,7 +9,7 @@
                 <div>
                     @if(count($executors))
                         @if($income_task && $income_task->status == 0 || auth()->user()->position_id == 2 && $item->status == 0)
-                            <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на поручение</button>
+                            <button data-uk-toggle="{target:'#approve', animation:'uk-animation-slide-right, uk-animation-slide-right'}" class="uk-button uk-button-primary" data-uk-modal>Отправить на исполнение</button>
                         @endif
                     @endif
                     @if($income_task && $income_task->status == 0 && !$outcome_task)
@@ -51,7 +51,7 @@
                     @endforeach
                     <hr>
                     <div class="uk-form-row uk-text-right">
-                        <button class="uk-button uk-button-success">Поручить</button>
+                        <button class="uk-button uk-button-success">Отправить</button>
                     </div>
                 </form>
                 @endif
@@ -79,7 +79,7 @@
                                 <td class="width-content">{{ $task->executor()->last_name .' '. str_limit($task->executor()->first_name, 1, '.') . str_limit($task->executor()->middle_name, 1, '') }}</td>
                                 <td class="width-content">
                                     @if($task->status == 4)
-                                        Отклонен в соглсовании
+                                        Не прошел согласование
                                     @elseif($task->status == 3)
                                         Согласован
                                     @elseif($task->status == 2)
@@ -87,7 +87,7 @@
                                     @elseif($task->status == 1)
                                         В процесе
                                     @elseif($task->status == 0)
-                                        Отправлен на поручение
+                                        Отправлен на исполнение
                                     @endif
                                 </td>
                                 <td class="width-content">
@@ -161,7 +161,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Категория дела:</p>
+                            <p class="uk-text-bold">Категория дела</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->category()->name }}</p>
@@ -172,7 +172,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">№ дела:</p>
+                            <p class="uk-text-bold">№ дела</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->case_number }}</p>
@@ -183,7 +183,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">№ статьи:</p>
+                            <p class="uk-text-bold">№ статьи</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->article_number }}</p>
@@ -194,7 +194,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Статус:</p>
+                            <p class="uk-text-bold">Статус</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->status()->name }}</p>
@@ -205,7 +205,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Дополнительный статус:</p>
+                            <p class="uk-text-bold">Дополнительный статус</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->addition_status()->name }}</p>
@@ -216,7 +216,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Шифр экспертизы:</p>
+                            <p class="uk-text-bold">Шифр экспертизы</p>
                         </div>
                         <div class="uk-width-4-6">
                             <ul class="uk-list">
@@ -231,7 +231,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Регион назначивший экспертизу:</p>
+                            <p class="uk-text-bold">Регион назначивший экспертизу</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->region()->name }}</p>
@@ -242,7 +242,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Наименование органа:</p>
+                            <p class="uk-text-bold">Наименование органа</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->agency()->name }}</p>
@@ -253,7 +253,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Орган назначивший экспертизу:</p>
+                            <p class="uk-text-bold">Орган назначивший экспертизу</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->organ()->name }}</p>
@@ -265,7 +265,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Введите название органа:</p>
+                                <p class="uk-text-bold">Введите название органа</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->expertise_organ_name }}</p>
@@ -277,13 +277,13 @@
                 <hr>
 
                 <div class="">
-                    <span class="uk-h4">Данные лица назначевшего экспертизу</span>
+                    <span class="uk-h4">Данные лица назначившего экспертизу</span>
                 </div>
 
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">ФИО:</p>
+                            <p class="uk-text-bold">ФИО</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->expertise_user_fullname }}</p>
@@ -296,7 +296,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Должность:</p>
+                                <p class="uk-text-bold">Должность</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->expertise_user_position }}</p>
@@ -309,7 +309,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Звание:</p>
+                                <p class="uk-text-bold">Звание</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->expertise_user_rank }}</p>

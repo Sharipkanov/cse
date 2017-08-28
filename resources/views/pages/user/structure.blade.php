@@ -8,8 +8,8 @@
             @if(auth()->user()->position_id == 1)
                 <div class="uk-flex uk-flex-middle uk-flex-space-between">
                     <div>
-                        <a href="{{ route('page.department.create') }}" class="uk-button uk-button-primary">Создать отдел</a>
-                        <a href="{{ route('page.subdivision.create') }}" class="uk-button uk-button-primary">Создать подотдел</a>
+                        <a href="{{ route('page.department.create') }}" class="uk-button uk-button-primary">Добавить отдел</a>
+                        <a href="{{ route('page.subdivision.create') }}" class="uk-button uk-button-primary">Добавить подотдел</a>
                     </div>
                     <div>
                         <a href="{{ route('page.user.create') }}" class="uk-button uk-button-primary">Добавить сотрудника</a>
@@ -37,7 +37,7 @@
 
                                 <?php $departmentLeader = $department->leader(); ?>
                                 @if($departmentLeader)
-                                    <h4>Начальник отдела: {{ $departmentLeader->last_name .' '. str_limit($departmentLeader->first_name, 1, '.') . str_limit($departmentLeader->middle_name, 1, '') }} ({{ $departmentLeader->position()->name }})</h4>
+                                    <h4>Заместитель директора: {{ $departmentLeader->last_name .' '. str_limit($departmentLeader->first_name, 1, '.') . str_limit($departmentLeader->middle_name, 1, '') }}</h4>
                                 @endif
                                 <hr>
                                 <?php $departmentUsers = $department->department_users(true); ?>
@@ -82,7 +82,7 @@
                                                         <li>
                                                             <?php $subdivisionLeader = $subdivision->leader(); ?>
                                                             @if($subdivisionLeader)
-                                                                <h5>Начальник подотдела: {{ $subdivisionLeader->last_name .' '. str_limit($subdivisionLeader->first_name, 1, '.') . str_limit($subdivisionLeader->middle_name, 1, '') }} ({{ $subdivisionLeader->position()->name }})</h5>
+                                                                <h5>Заведующий лабораторией: {{ $subdivisionLeader->last_name .' '. str_limit($subdivisionLeader->first_name, 1, '.') . str_limit($subdivisionLeader->middle_name, 1, '') }}</h5>
                                                                 <hr>
                                                             @endif
                                                             <?php $subdivionUsers = $subdivision->subdivision_users(); ?>

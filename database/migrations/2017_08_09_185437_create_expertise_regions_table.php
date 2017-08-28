@@ -13,11 +13,13 @@ class CreateExpertiseRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('expertise_regions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('expertise_regions')) {
+            Schema::create('expertise_regions', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

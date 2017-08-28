@@ -22,21 +22,21 @@
                     <form action="{{ route('page.task.edit', ['task' => $item->id]) }}" class="uk-form" method="post">
                         <input type="hidden" name="parent_id" value="{{ $item->id }}">
                         {{ csrf_field() }}
-                        @if($users)
+                        @if(count($users))
                             <div class="uk-form-row">
-                                <label class="uk-form-label">Укажите срок исполнения</label>
-                                <div class="uk-form-controls uk-margin-small-top">
-                                    <select name="executor_id" class="uk-width-1-1">
-                                        <option value="">Выберите исполнителя</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ (old('executor_id') == $user->id) ? 'selected' : ''}}>{{ $user->last_name }} {{ $user->first_name }} {{ $user->middle_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <label class="uk-form-label">Выберите исполнитя</label>
+                                @foreach($users as $user)
+                                    <div class="uk-form-controls uk-margin-small-top">
+                                        <label class="uk-flex-inline">
+                                            <span><input name="executors[{{$user->id}}]" type="checkbox" value="{{ $user->id }}" {{ (old('executors.'. $user->id) == $user->id) ? 'checked' : ''}}></span>
+                                            <span class="uk-margin-small-left"><span>{{ $user->last_name }} {{ $user->first_name }} {{ $user->middle_name }}</span></span>
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
                         @endif
-                        @if ($errors->has('executor_id'))
-                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executor_id') }}</p>
+                        @if ($errors->has('executors'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executors') }}</p>
                         @endif
                         <div class="uk-form-row">
                             <label class="uk-form-label">Укажите срок исполнения</label>
@@ -72,7 +72,7 @@
                 </div>
             @endif
 
-            <div class="uk-margin-top uk-margin-bottom">
+            <div class="uk-margin-top uk-margin-large-bottom">
                 <div class="uk-form">
                     <h3>Каточка задания № {{ $item->register_number }}</h3>
                     <hr>
@@ -91,7 +91,7 @@
                             <div class="uk-margin-top">
                                 <div class="uk-grid">
                                     <div class="uk-width-2-6">
-                                        <p class="uk-text-bold">ФИО исполнителя:</p>
+                                        <p class="uk-text-bold">ФИО исполнителя</p>
                                     </div>
                                     <div class="uk-width-4-6">
                                         <p>{{ $item->executor()->last_name }} {{ $item->executor()->first_name }} {{ $item->executor()->middle_name }}</p>
@@ -101,7 +101,7 @@
                             <div class="uk-margin-top">
                                 <div class="uk-grid">
                                     <div class="uk-width-2-6">
-                                        <p class="uk-text-bold">Срок исполнения:</p>
+                                        <p class="uk-text-bold">Срок исполнения</p>
                                     </div>
                                     <div class="uk-width-4-6">
                                         <p>{{ $item->execution_period }}</p>
@@ -111,7 +111,7 @@
                             <div class="uk-margin-top">
                                 <div class="uk-grid">
                                     <div class="uk-width-2-6">
-                                        <p class="uk-text-bold">Статус:</p>
+                                        <p class="uk-text-bold">Статус</p>
                                     </div>
                                     <div class="uk-width-4-6">
                                         @if($item->status == 2)
@@ -129,7 +129,7 @@
                             <div>
                                 <div class="uk-grid">
                                     <div class="uk-width-2-6">
-                                        <p class="uk-text-bold">Основание:</p>
+                                        <p class="uk-text-bold">Основание</p>
                                     </div>
                                     <div class="uk-width-4-6">
                                         <p>
@@ -177,7 +177,7 @@
                                 <div class="uk-margin-top">
                                     <div class="uk-grid">
                                         <div class="uk-width-2-6">
-                                            <p class="uk-text-bold">ФИО исполнителя:</p>
+                                            <p class="uk-text-bold">ФИО исполнителя</p>
                                         </div>
                                         <div class="uk-width-4-6">
                                             <p>{{ $item_assigned->executor()->last_name }} {{ $item_assigned->executor()->first_name }} {{ $item_assigned->executor()->middle_name }}</p>
@@ -187,7 +187,7 @@
                                 <div class="uk-margin-top">
                                     <div class="uk-grid">
                                         <div class="uk-width-2-6">
-                                            <p class="uk-text-bold">Срок исполнения:</p>
+                                            <p class="uk-text-bold">Срок исполнения</p>
                                         </div>
                                         <div class="uk-width-4-6">
                                             <p>{{ $item_assigned->execution_period }}</p>
@@ -197,7 +197,7 @@
                                 <div class="uk-margin-top">
                                     <div class="uk-grid">
                                         <div class="uk-width-2-6">
-                                            <p class="uk-text-bold">Статус:</p>
+                                            <p class="uk-text-bold">Статус</p>
                                         </div>
                                         <div class="uk-width-4-6">
                                             @if($item_assigned->status == 2)
@@ -215,7 +215,7 @@
                                 <div>
                                     <div class="uk-grid">
                                         <div class="uk-width-2-6">
-                                            <p class="uk-text-bold">Основание:</p>
+                                            <p class="uk-text-bold">Основание</p>
                                         </div>
                                         <div class="uk-width-4-6">
                                             <p>

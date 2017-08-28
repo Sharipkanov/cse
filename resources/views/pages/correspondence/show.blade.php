@@ -9,13 +9,13 @@
                 <div>
                     <div class="uk-flex uk-flex-middle">
                         <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status uk-margin-small-right"></div><small>Зарегистрирован (Не присвоен)</small></div>
-                        <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистраций</small></div>
+                        <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status warning uk-margin-small-right"></div><small>На регистрации</small></div>
                         <div class="uk-flex uk-flex-middle uk-margin-right"><div class="status success uk-margin-small-right"></div><small>Зарегистрирован</small></div>
                     </div>
                 </div>
                 <div>
                     @if(auth()->user()->position_id == 4 && $item->status == 2 && !$item->is_income)
-                        <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Присвоить решистрационный номер</button>
+                        <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#register',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Присвоить регистрационный номер</button>
                     @endif
                     @if(auth()->user()->position_id == 2 && $item->status == 1)
                         <button class="uk-button uk-button-primary" data-uk-toggle="{target:'#task-toggle',  animation:'uk-animation-slide-right, uk-animation-slide-right'}">Создать карточку задания</button>
@@ -53,21 +53,21 @@
                         <input type="hidden" name="correspondence_id" value="{{ $item->id }}">
                         @if($departments)
                             <div class="uk-form-row">
-                                <label class="uk-form-label">Укажите срок исполнения</label>
-                                <div class="uk-form-controls uk-margin-small-top">
-                                    <select name="executor_id" class="uk-width-1-1">
-                                        <option value="">Выберите исполнителя</option>
-                                        @foreach($departments as $department)
-                                            @if($department->leader_id)
-                                                <option value="{{ $department->leader()->id }}" {{ (old('executor_id') == $department->leader()->id) ? 'selected' : ''}}>{{ $department->leader()->last_name }} {{ $department->leader()->first_name }} {{ $department->leader()->middle_name }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <label class="uk-form-label">Выберите исполнитя</label>
+                                @foreach($departments as $department)
+                                    @if($department->leader_id)
+                                        <div class="uk-form-controls uk-margin-small-top">
+                                            <label class="uk-flex-inline">
+                                                <span><input name="executors[{{ $department->leader()->id }}]" type="checkbox" value="{{ $department->leader()->id }}" {{ (old('executors.' . $department->leader()->id) == $department->leader()->id) ? 'checked' : ''}}></span>
+                                                <span class="uk-margin-small-left"><span>{{ $department->leader()->last_name }} {{ $department->leader()->first_name }} {{ $department->leader()->middle_name }}</span></span>
+                                            </label>
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
                         @endif
-                        @if ($errors->has('executor_id'))
-                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executor_id') }}</p>
+                        @if ($errors->has('executors'))
+                            <p class="uk-text-small uk-text-danger uk-margin-small">{{ $errors->first('executors') }}</p>
                         @endif
                         <div class="uk-form-row">
                             <label class="uk-form-label">Укажите срок исполнения</label>
@@ -115,7 +115,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Регистрационный номер:</p>
+                                <p class="uk-text-bold">Регистрационный номер</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->register_number }}</p>
@@ -127,7 +127,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Язык обращения:</p>
+                            <p class="uk-text-bold">Язык обращения</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->language()->name }}</p>
@@ -138,7 +138,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Корреспондент:</p>
+                            <p class="uk-text-bold">Корреспондент</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->correspondent()->name }}</p>
@@ -149,7 +149,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">ФИО исполнителя:</p>
+                            <p class="uk-text-bold">ФИО исполнителя</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->executor_fullname }}</p>
@@ -161,7 +161,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Исходящий №:</p>
+                                <p class="uk-text-bold">Исходящий №</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->outcome_number }}</p>
@@ -174,7 +174,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Дата исходящего:</p>
+                                <p class="uk-text-bold">Дата исходящего</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->outcome_date }}</p>
@@ -187,7 +187,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Срок исполнения:</p>
+                                <p class="uk-text-bold">Срок исполнения</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->execution_period }}</p>
@@ -200,7 +200,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Получатель:</p>
+                                <p class="uk-text-bold">Получатель</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->recipent()->last_name .' '. str_limit($item->recipent()->first_name, 1, '.') . str_limit($item->recipent()->middle_name, 1, '') }}</p>
@@ -213,7 +213,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Тип документа:</p>
+                                <p class="uk-text-bold">Тип документа</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p>{{ $item->document_type()->name}}</p>
@@ -225,7 +225,7 @@
                 <div class="uk-margin-top">
                     <div class="uk-grid">
                         <div class="uk-width-2-6">
-                            <p class="uk-text-bold">Страницы:</p>
+                            <p class="uk-text-bold">Страницы</p>
                         </div>
                         <div class="uk-width-4-6">
                             <p>{{ $item->pages }}</p>
@@ -237,7 +237,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Ответ на {{ ($item->is_income) ? 'исходящий' : 'входящий'}}:</p>
+                                <p class="uk-text-bold">Ответ на {{ ($item->is_income) ? 'исходящий' : 'входящий'}}</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p><a href="{{ route('page.correspondence.show', ['correspondence' => $item->reply_correspondence()->id]) }}">Просмотреть</a></p>
@@ -267,7 +267,7 @@
                     <div class="uk-margin-top">
                         <div class="uk-grid">
                             <div class="uk-width-2-6">
-                                <p class="uk-text-bold">Основание:</p>
+                                <p class="uk-text-bold">Основание</p>
                             </div>
                             <div class="uk-width-4-6">
                                 <p><a href="{{ route('page.document.show', ['document' => $item->document()->id]) }}">Просмотреть</a></p>

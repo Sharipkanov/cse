@@ -13,11 +13,13 @@ class CreateCorrespondentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('correspondents', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('correspondents')) {
+            Schema::create('correspondents', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name')->unique();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
